@@ -1,0 +1,155 @@
+﻿@model List<ContatoModel>
+@{
+    ViewData["Title"] = "Listagem de contatos";
+}
+
+<h1>Lista de contatos</h1>
+
+<div class="d-grip gap-2 d-md-flex justify-content-start mb-3">
+    <!-- Opção 1: ir para a página Criar -->
+    <a class="btn btn-primary" role="button" asp-controller="Contato" asp-action="Criar">
+        <i class="bi bi-person-plus"></i> Adicionar na Página
+    </a>
+
+    <!-- Opção 2: abrir o modal -->
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCriar">
+        <i class="bi bi-plus-circle"></i> Adicionar no Modal
+    </button>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Sobrenome</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (ContatoModel contato in Model)
+            {
+                <tr>
+                    <th scope="row">@contato.Id</th>
+                    <td>@contato.Nome</td>
+                    <td>@contato.Sobrenome</td>
+                    <td>@contato.Email</td>
+                    <td>
+                        <a asp-action="Detalhes" asp-route-id="@contato.Id"
+                           class="btn btn-outline-success btn-sm">
+                            <i class="bi bi-eye"></i> Detalhes
+                        </a>
+                        <a asp-action="Editar" asp-route-id="@contato.Id"
+                           class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a data-id="@contato.Id"
+                           data-nome="@contato.Nome"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modalDeletar"
+                           class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash3"></i> Deletar
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">Nenhum contato encontrado.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Modal de Cadastro -->
+<div class="modal fade" id="modalCriar" tabindex="-1" aria-labelledby="modalCriarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCriarLabel">Cadastrar Contato</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-controller="Contato" asp-action="Criar" method="post">
+                    <div class="mb-3">
+                        <label asp-for="FirstOrDefault().Nome" class="form-label">Nome</label>
+                        <input name="Nome" class="form-control" placeholder="Digite o nome" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sobrenome</label>
+                        <input name="Sobrenome" class="form-control" placeholder="Digite o sobrenome" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">E-mail</label>
+                        <input name="Email" type="email" class="form-control" placeholder="Digite o e-mail" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sexo</label>
+                        <input name="Sexo" class="form-control" placeholder="Digite o sexo" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Nascimento</label>
+                        <input name="Nascimento" type="date" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Telefone</label>
+                        <input name="Telefone" class="form-control" placeholder="Digite o telefone" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">CPF</label>
+                        <input name="Cpf" class="form-control" placeholder="Digite o CPF" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Permissão</label>
+                        <input name="Permissao" class="form-control" placeholder="Permissão" />
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Salvar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal conformação de excluir-->
+<div class="modal fade" id="modalDeletar" tabindex="-1" aria-labelledby="modalDeletarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 class="modal-title">Excluir Contato</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+
+                <form asp-controller="Contato" asp-action="DeletarConfirmado" method="post">
+                    <input type="hidden" id="contatoId" name="Id" />
+
+                    <div class="text-center">
+                        <h2>Tem certeza que deseja excluir o contato <span id="contatoNome"></span>?</h2>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var modalDeletar = document.getElementById('modalDeletar');
+    modalDeletar.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // botão que abriu o modal
+        var id = button.getAttribute('data-id');
+        var nome = button.getAttribute('data-nome');
+
+        // seta os valores dentro do modal
+        document.getElementById('contatoId').value = id;
+        document.getElementById('contatoNome').innerText = nome;
+    });
+</script>
+

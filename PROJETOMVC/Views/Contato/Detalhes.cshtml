@@ -1,0 +1,36 @@
+﻿@model PROJETOMVC.Models.ContatoModel
+
+@{
+    ViewData["Title"] = "Detalhes do Contato";
+}
+
+<h2>Detalhes do Contato</h2>
+
+<div class="card mt-3 p-3 shadow-sm">
+    <dl class="row">
+        <dt class="col-sm-2">ID</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+
+        <dt class="col-sm-2">Nome</dt>
+        <dd class="col-sm-10">@Model.Nome</dd>
+
+        <dt class="col-sm-2">Sobrenome</dt>
+        <dd class="col-sm-10">@Model.Sobrenome</dd>
+
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+        <dt class="col-sm-2">Telefone</dt>
+        <dd class="col-sm-10">@Model.Telefone</dd>
+        <dt class="col-sm-2">CPF </dt>
+        <dd class="col-sm-10">@Model.Cpf </dd>
+        <dt class="col-sm-2">Permissão</dt>
+        <dd class="col-sm-10">@Model.Permissao</dd>
+        <dt class="col-sm-2">Sexo</dt>
+        <dd class="col-sm-10">@Model.Sexo</dd>
+        <dt class="col-sm-2">Data Nacimento</dt>
+        <dd class="col-sm-10">@Model.Nascimento</dd>
+
+    </dl>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Voltar</a>
