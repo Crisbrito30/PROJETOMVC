@@ -95,17 +95,24 @@ namespace PROJETOMVC.Repositorio
             return true;
         }
 
+        // Buscar usuário por login
+        public async Task<UsuarioModel> BuscarPorLoginAsync(string login)
+        {
+            return await _bancoContext.Usuarios
+                .FirstOrDefaultAsync(u => u.Login == login);
+        }
+
         // Métodos auxiliares privados
         private async Task<bool> EmailExisteAsync(string email, int? usuarioId = null)
         {
             return await _bancoContext.Usuarios
-                .AnyAsync(u => u.Email == email && u.Id != usuarioId);
+                .AnyAsync(u => u.Email == email && (usuarioId == null || u.Id != usuarioId));
         }
 
         private async Task<bool> LoginExisteAsync(string login, int? usuarioId = null)
         {
             return await _bancoContext.Usuarios
-                .AnyAsync(u => u.Login == login && u.Id != usuarioId);
+                .AnyAsync(u => u.Login == login && (usuarioId == null || u.Id != usuarioId));
         }
 
 
