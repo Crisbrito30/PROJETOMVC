@@ -1,32 +1,41 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PROJETOMVC.Data;
-using PROJETOMVC.Models;
 using PROJETOMVC.Repositorio;
+// outros usings...
 
 var builder = WebApplication.CreateBuilder(args);
 
-//dbcontext
+// DB, repositórios, sessão...
 builder.Services.AddDbContext<BancoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
 
 builder.Services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
-// ✅ ADICIONE A CONFIGURAÇÃO DE SESSÃO:
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Sessão expira em 30 minutos
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
 
-// Add services to the container.
+// Configura autenticação por cookie
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index";       // para onde redirecionar se não autenticado
+        options.LogoutPath = "/Login/Sair";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // em produção
+    });
+
+// Controllers + views
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -34,18 +43,16 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();     // certifique-se que os arquivos estáticos estão habilitados
 app.UseRouting();
 
-// ✅ ADICIONE O MIDDLEWARE DE SESSÃO (ANTES DE UseAuthorization):
-app.UseSession();
-
+app.UseSession();         // sessão (se ainda quiser usar além do cookie)
+app.UseAuthentication();  // importante: antes de UseAuthorization
 app.UseAuthorization();
-
-app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}") // ✅ MUDADO PARA Login
+    pattern: "{controller=Login}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Run();

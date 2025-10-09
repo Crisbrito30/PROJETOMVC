@@ -1,77 +1,82 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PROJETOMVC.Models;
 using PROJETOMVC.Repositorio;
+using System.Security.Claims;
+// outros usings...
 
-namespace PROJETOMVC.Controllers
+[AllowAnonymous]
+public class LoginController : Controller
 {
-    public class LoginController : Controller
+    private readonly IUsuarioRepositorio _usuarioRepositorio;
+    public LoginController(IUsuarioRepositorio usuarioRepositorio)
     {
-        private readonly IUsuarioRepositorio _usuarioRepositorio;
+        _usuarioRepositorio = usuarioRepositorio;
+    }
 
-        public LoginController(IUsuarioRepositorio usuarioRepositorio)
-        {
-            _usuarioRepositorio = usuarioRepositorio;
-        }
+    public IActionResult Index()
+    {
+        if (HttpContext.Session.GetString("UsuarioLogado") != null)
+            return RedirectToAction("Index", "Home");
 
-        // GET: Login/Index - Exibe tela de login
-        public IActionResult Index()
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Entrar(LoginModel loginModel)
+    {
+        try
         {
-            // Se já estiver logado, redireciona
-            if (HttpContext.Session.GetString("UsuarioLogado") != null)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index", "Home");
-            }
-
-            return View();
-        }
-
-        // POST: Login/Entrar - Processa login
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Entrar(LoginModel loginModel)
-        {
-            try
-            {
-                if (ModelState.IsValid)
+                var usuario = await _usuarioRepositorio.BuscarPorLoginAsync(loginModel.Login);
+                if (usuario != null && BCrypt.Net.BCrypt.Verify(loginModel.Senha, usuario.Senha))
                 {
-                    var usuario = await _usuarioRepositorio.BuscarPorLoginAsync(loginModel.Login);
-
-                    if (usuario != null)
+                    // Cria claims
+                    var claims = new List<Claim>
                     {
-                        // Valida senha com BCrypt
-                        if (BCrypt.Net.BCrypt.Verify(loginModel.Senha, usuario.Senha))
-                        {
-                            // Salva sessão
-                            HttpContext.Session.SetString("UsuarioLogado", usuario.Nome);
-                            HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
-                            HttpContext.Session.SetString("UsuarioPerfil", usuario.Perfil.ToString());
+                        new Claim(ClaimTypes.Name, usuario.Nome),
+                        new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                        new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
+                    };
 
-                            TempData["MensagemSucesso"] = $"Bem-vindo(a), {usuario.Nome}!";
-                            return RedirectToAction("Index", "Home");
-                        }
-                    }
+                    var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var principal = new ClaimsPrincipal(identity);
 
-                    TempData["MensagemErro"] = "Login ou senha inválidos!";
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                    // Opcional: ainda gravar na sessão se precisar
+                    HttpContext.Session.SetString("UsuarioLogado", usuario.Nome);
+                    HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
+                    HttpContext.Session.SetString("UsuarioPerfil", usuario.Perfil.ToString());
+
+                    TempData["MensagemSucesso"] = $"Bem-vindo(a), {usuario.Nome}!";
+                    return RedirectToAction("Index", "Home");
                 }
-                else
-                {
-                    TempData["MensagemErro"] = "Preencha todos os campos!";
-                }
+
+                TempData["MensagemErro"] = "Login ou senha inválidos!";
             }
-            catch (Exception ex)
+            else
             {
-                TempData["MensagemErro"] = $"Erro ao fazer login: {ex.Message}";
+                TempData["MensagemErro"] = "Preencha todos os campos!";
             }
-
-            return View("Index");
         }
-
-        // GET: Login/Sair - Faz logout
-        public IActionResult Sair()
+        catch (Exception ex)
         {
-            HttpContext.Session.Clear();
-            TempData["MensagemSucesso"] = "Logout realizado com sucesso!";
-            return RedirectToAction("Index");
+            TempData["MensagemErro"] = $"Erro ao fazer login: {ex.Message}";
         }
+
+        return View("Index");
+    }
+
+    public async Task<IActionResult> Sair()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.Session.Clear();
+        TempData["MensagemSucesso"] = "Logout realizado com sucesso!";
+        return RedirectToAction("Index");
     }
 }

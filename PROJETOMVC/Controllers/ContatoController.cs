@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PROJETOMVC.Models;
 using PROJETOMVC.Repositorio;
-
+using Microsoft.AspNetCore.Authorization;
 namespace PROJETOMVC.Controllers
 {
+    [Authorize]
     public class ContatoController : Controller
     {
         private readonly IContatoRepositorio _contatoRepositorio;
