@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PROJETOMVC.Migrations
 {
     [DbContext(typeof(AcademiaContext))]
-    [Migration("20251013010147_CriacaoSistemaTreinos")]
+    [Migration("20251016012154_CriacaoSistemaTreinos")]
     partial class CriacaoSistemaTreinos
     {
         /// <inheritdoc />
@@ -161,6 +161,9 @@ namespace PROJETOMVC.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<int>("PerfilUser")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Plano")
                         .HasColumnType("text");
 
@@ -172,9 +175,6 @@ namespace PROJETOMVC.Migrations
                     b.Property<string>("Telefone")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
-
-                    b.Property<int>("TipoUsuario")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -195,8 +195,8 @@ namespace PROJETOMVC.Migrations
                             DataCadastro = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@academia.com",
                             Nome = "Administrador",
-                            Senha = "admin123",
-                            TipoUsuario = 3
+                            PerfilUser = 3,
+                            Senha = "admin123"
                         });
                 });
 

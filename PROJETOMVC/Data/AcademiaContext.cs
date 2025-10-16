@@ -116,7 +116,7 @@ namespace AcademiaApp.Data
                     Nome = "Administrador",
                     Email = "admin@academia.com",
                     Cpf = "000.000.000-00",
-                    TipoUsuario = TipoUsuario.Administrador,
+                    PerfilUser = PerfilUser.Administrador,
                     Senha = "admin123", // Lembre-se de usar hash em produção!
                     DataCadastro = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     Ativo = true

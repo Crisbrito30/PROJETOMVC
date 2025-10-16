@@ -43,7 +43,7 @@ namespace PROJETOMVC.Migrations
                     Cpf = table.Column<string>(type: "character varying(14)", maxLength: 14, nullable: false),
                     DataNascimento = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     Endereco = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    TipoUsuario = table.Column<int>(type: "integer", nullable: false),
+                    PerfilUser = table.Column<int>(type: "integer", nullable: false),
                     DataCadastro = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Ativo = table.Column<bool>(type: "boolean", nullable: false),
                     Senha = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -202,8 +202,8 @@ namespace PROJETOMVC.Migrations
 
             migrationBuilder.InsertData(
                 table: "Usuarios",
-                columns: new[] { "Id", "Ativo", "Cpf", "Cref", "DataCadastro", "DataMatricula", "DataNascimento", "Email", "Endereco", "Especialidade", "Nome", "ObservacoesMedicas", "Plano", "Senha", "Telefone", "TipoUsuario" },
-                values: new object[] { 1, true, "000.000.000-00", null, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, null, "admin@academia.com", null, null, "Administrador", null, null, "admin123", null, 3 });
+                columns: new[] { "Id", "Ativo", "Cpf", "Cref", "DataCadastro", "DataMatricula", "DataNascimento", "Email", "Endereco", "Especialidade", "Nome", "ObservacoesMedicas", "PerfilUser", "Plano", "Senha", "Telefone" },
+                values: new object[] { 1, true, "000.000.000-00", null, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), null, null, "admin@academia.com", null, null, "Administrador", null, 3, null, "admin123", null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExecucoesExercicio_ExecucaoTreinoId",

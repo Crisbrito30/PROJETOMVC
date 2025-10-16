@@ -40,7 +40,7 @@ namespace AcademiaApp.Models
 
         [Required(ErrorMessage = "O tipo de usuário é obrigatório")]
         [Display(Name = "Tipo de Usuário")]
-        public TipoUsuario TipoUsuario { get; set; }
+        public PerfilUser PerfilUser { get; set; }
 
         [Display(Name = "Data de Cadastro")]
         public DateTime DataCadastro { get; set; } = DateTime.Now;
@@ -67,7 +67,7 @@ namespace AcademiaApp.Models
         [Display(Name = "Observações Médicas")]
         public string? ObservacoesMedicas { get; set; }
 
-        // Campos específicos para TREINADORES
+        // Campos específicos para TREINADORESFp
         [StringLength(50)]
         [Display(Name = "CREF")]
         public string? Cref { get; set; }
@@ -84,7 +84,7 @@ namespace AcademiaApp.Models
         public virtual ICollection<Treino> TreinosCriados { get; set; }
     }
 
-    public enum TipoUsuario
+    public enum PerfilUser
     {
         [Display(Name = "Aluno")]
         Aluno = 1,

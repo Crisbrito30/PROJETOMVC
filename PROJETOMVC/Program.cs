@@ -1,20 +1,18 @@
 ﻿using AcademiaApp.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using PROJETOMVC.Data;
-using PROJETOMVC.Repositorio;
+
 // outros usings...
 
 var builder = WebApplication.CreateBuilder(args);
 
 // DB, repositórios, sessão...
-builder.Services.AddDbContext<BancoContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
+
+
 builder.Services.AddDbContext<AcademiaContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
 
-builder.Services.AddScoped<IContatoRepositorio, ContatoRepositorio>();
-builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+
 
 
 builder.Services.AddSession(options =>

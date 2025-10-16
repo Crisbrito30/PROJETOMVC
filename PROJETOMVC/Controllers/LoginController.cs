@@ -40,7 +40,7 @@ public class LoginController : Controller
                     {
                         new Claim(ClaimTypes.Name, usuario.Nome),
                         new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                        new Claim(ClaimTypes.Role, usuario.Perfil.ToString())
+                        new Claim(ClaimTypes.Role, usuario.PerfilUser.ToString())
                     };
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -51,7 +51,7 @@ public class LoginController : Controller
                     // Opcional: ainda gravar na sessão se precisar
                     HttpContext.Session.SetString("UsuarioLogado", usuario.Nome);
                     HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
-                    HttpContext.Session.SetString("UsuarioPerfil", usuario.Perfil.ToString());
+                    HttpContext.Session.SetString("UsuarioPerfil", usuario.PerfilUser.ToString());
 
                     TempData["MensagemSucesso"] = $"Bem-vindo(a), {usuario.Nome}!";
                     return RedirectToAction("Index", "Home");

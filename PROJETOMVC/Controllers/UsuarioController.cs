@@ -2,6 +2,7 @@
 using PROJETOMVC.Models;
 using PROJETOMVC.Repositorio;
 using Microsoft.AspNetCore.Authorization;
+using AcademiaApp.Models;
 namespace PROJETOMVC.Controllers
 {
     [Authorize]
@@ -25,14 +26,14 @@ namespace PROJETOMVC.Controllers
             catch (Exception ex)
             {
                 TempData["MensagemErro"] = $"Erro ao buscar usuários: {ex.Message}";
-                return View(new List<UsuarioModel>());
+                return View(new List<Usuario>());
             }
         }
 
         // POST: Usuario/Adicionar - Cria novo usuário
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Adicionar(UsuarioModel usuario)
+        public async Task<IActionResult> Adicionar(Usuario usuario)
         {
             try
             {
@@ -59,7 +60,7 @@ namespace PROJETOMVC.Controllers
         // POST: Usuario/Atualizar - Atualiza usuário existente
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Atualizar(UsuarioModel usuario)
+        public async Task<IActionResult> Atualizar(Usuario usuario)
         {
             try
             {
