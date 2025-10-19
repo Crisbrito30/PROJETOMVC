@@ -1,0 +1,74 @@
+﻿<script>
+    // Função para visualizar detalhes do usuário
+    function visualizarUsuario(id, nome, email, cpf, telefone, tipoUsuario, dataCadastro, dataNascimento, endereco, ativo) {
+        document.getElementById('viewId').textContent = id;
+        document.getElementById('viewNome').textContent = nome || '-';
+        document.getElementById('viewEmail').textContent = email || '-';
+        document.getElementById('viewCpf').textContent = cpf || '-';
+        document.getElementById('viewTelefone').textContent = telefone || '-';
+        document.getElementById('viewDataCadastro').textContent = dataCadastro || '-';
+        document.getElementById('viewDataNascimento').textContent = dataNascimento || '-';
+        document.getElementById('viewEndereco').textContent = endereco || '-';
+
+        // Tipo de Usuário com badge
+        let tipoHtml = '';
+        let badgeClass = 'bg-primary';
+
+        if (tipoUsuario === 'Administrador') {
+            badgeClass = 'bg-danger';
+        } else if (tipoUsuario === 'Treinador') {
+            badgeClass = 'bg-warning text-dark';
+        }
+
+        tipoHtml = `<span class="badge ${badgeClass}">${tipoUsuario}</span>`;
+        document.getElementById('viewTipoUsuario').innerHTML = tipoHtml;
+
+        // Status Ativo/Inativo
+        let statusHtml = ativo
+            ? '<span class="badge bg-success">Ativo</span>'
+            : '<span class="badge bg-secondary">Inativo</span>';
+        document.getElementById('viewStatus').innerHTML = statusHtml;
+    }
+
+    // Função para preparar edição do usuário
+    function editarUsuario(id, nome, email, cpf, telefone, tipoUsuario, ativo) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editNome').value = nome;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editCpf').value = cpf;
+        document.getElementById('editTelefone').value = telefone || '';
+        document.getElementById('editTipoUsuario').value = tipoUsuario;
+        document.getElementById('editAtivo').checked = ativo;
+    }
+
+    // Função para preparar exclusão do usuário
+    function prepararDeletar(id, nome) {
+        document.getElementById('deleteId').value = id;
+        document.getElementById('deleteNome').textContent = nome;
+    }
+
+    // Controle de campos condicionais no modal de adicionar
+    document.addEventListener('DOMContentLoaded', function() {
+        const perfilSelect = document.getElementById('PerfilUserSelect');
+        const camposAluno = document.getElementById('camposAluno');
+        const camposTreinador = document.getElementById('camposTreinador');
+
+        if (perfilSelect) {
+            perfilSelect.addEventListener('change', function() {
+                const perfil = this.value;
+
+                // Esconde todos os campos condicionais
+                camposAluno.classList.add('d-none');
+                camposTreinador.classList.add('d-none');
+
+                // Mostra campos específicos baseado na seleção
+                if (perfil === '1') { // Aluno
+                    camposAluno.classList.remove('d-none');
+                } else if (perfil === '2') { // Treinador
+                    camposTreinador.classList.remove('d-none');
+                }
+                // Administrador não tem campos específicos
+            });
+        } 
+    });
+</script>

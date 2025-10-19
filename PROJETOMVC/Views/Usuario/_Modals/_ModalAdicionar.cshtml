@@ -1,0 +1,113 @@
+﻿<div class="modal fade" id="modalAdicionar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-plus-circle me-2"></i>Novo Usuário
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-action="Adicionar" method="post">
+                <div class="modal-body">
+                    <!-- Dados gerais -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Nome Completo *</label>
+                            <input type="text" class="form-control" name="Nome" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Email *</label>
+                            <input type="email" class="form-control" name="Email" required />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">CPF *</label>
+                            <input type="text" class="form-control" name="Cpf" required maxlength="14" placeholder="000.000.000-00" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Telefone</label>
+                            <input type="text" class="form-control" name="Telefone" maxlength="15" placeholder="(00) 00000-0000" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Senha *</label>
+                            <input type="password" class="form-control" name="Senha" required minlength="6" />
+                            <small class="text-muted">Mínimo 6 caracteres</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Tipo de Usuário *</label>
+                            <select class="form-select" id="PerfilUserSelect" name="PerfilUser" required>
+                                <option value="">Selecione...</option>
+                                <option value="1">Aluno</option>
+                                <option value="2">Treinador</option>
+                                <option value="3">Administrador</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Data de Nascimento</label>
+                            <input type="date" class="form-control" name="DataNascimento" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Endereço</label>
+                            <input type="text" class="form-control" name="Endereco" maxlength="200" />
+                        </div>
+                    </div>
+
+                    <!-- Campos para ALUNO -->
+                    <div id="camposAluno" class="d-none">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Data de Matrícula</label>
+                                <input type="date" class="form-control" name="DataMatricula" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Plano</label>
+                                <input type="text" class="form-control" name="Plano" maxlength="100" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Observações Médicas</label>
+                            <textarea class="form-control" name="ObservacoesMedicas" rows="2" maxlength="500"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Campos para TREINADOR -->
+                    <div id="camposTreinador" class="d-none">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">CREF</label>
+                                <input type="text" class="form-control" name="Cref" maxlength="50" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">Especialidade</label>
+                                <input type="text" class="form-control" name="Especialidade" maxlength="100" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" name="Ativo" value="true" checked id="adicionarAtivo">
+                        <label class="form-check-label" for="adicionarAtivo">
+                            Usuário Ativo
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>Cadastrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -26,29 +26,33 @@ public class LoginController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    [HttpPost]
+    
     public async Task<IActionResult> Entrar(LoginModel loginModel)
     {
         try
         {
+            // Trim para evitar espaços
+            loginModel.Login = loginModel.Login?.Trim() ?? string.Empty;
+            loginModel.Senha = loginModel.Senha?.Trim() ?? string.Empty;
+
             if (ModelState.IsValid)
             {
                 var usuario = await _usuarioRepositorio.BuscarPorLoginAsync(loginModel.Login);
+
                 if (usuario != null && BCrypt.Net.BCrypt.Verify(loginModel.Senha, usuario.Senha))
                 {
-                    // Cria claims
                     var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, usuario.Nome),
-                        new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                        new Claim(ClaimTypes.Role, usuario.PerfilUser.ToString())
-                    };
+                {
+                    new Claim(ClaimTypes.Name, usuario.Nome),
+                    new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                    new Claim(ClaimTypes.Role, usuario.PerfilUser.ToString())
+                };
 
                     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var principal = new ClaimsPrincipal(identity);
-
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                    // Opcional: ainda gravar na sessão se precisar
                     HttpContext.Session.SetString("UsuarioLogado", usuario.Nome);
                     HttpContext.Session.SetInt32("UsuarioId", usuario.Id);
                     HttpContext.Session.SetString("UsuarioPerfil", usuario.PerfilUser.ToString());

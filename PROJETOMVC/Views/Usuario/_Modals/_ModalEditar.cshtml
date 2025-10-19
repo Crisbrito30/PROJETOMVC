@@ -1,0 +1,65 @@
+﻿<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">
+                    <i class="bi bi-pencil me-2"></i>Editar Usuário
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Atualizar" method="post">
+                <input type="hidden" id="editId" name="Id" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Nome Completo *</label>
+                            <input type="text" class="form-control" id="editNome" name="Nome" required />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Email *</label>
+                            <input type="email" class="form-control" id="editEmail" name="Email" required />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">CPF *</label>
+                            <input type="text" class="form-control" id="editCpf" name="Cpf" required maxlength="14" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Telefone</label>
+                            <input type="text" class="form-control" id="editTelefone" name="Telefone" maxlength="15" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Tipo de Usuário *</label>
+                            <select class="form-select" id="editTipoUsuario" name="TipoUsuario" required>
+                                <option value="1">Aluno</option>
+                                <option value="2">Treinador</option>
+                                <option value="3">Administrador</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check mt-4 pt-2">
+                                <input class="form-check-input" type="checkbox" id="editAtivo" name="Ativo" value="true">
+                                <label class="form-check-label" for="editAtivo">
+                                    Usuário Ativo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Nota:</strong> A senha não pode ser alterada por aqui. Entre em contato com o administrador se necessário.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-circle me-2"></i>Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

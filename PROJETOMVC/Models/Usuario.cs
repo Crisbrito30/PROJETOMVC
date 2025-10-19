@@ -77,11 +77,11 @@ namespace AcademiaApp.Models
         public string? Especialidade { get; set; }
 
         // Relacionamentos quando o usuário é ALUNO
-        public virtual ICollection<Treino> Treinos { get; set; }
-        public virtual ICollection<ExecucaoTreino> ExecucoesTreino { get; set; }
+        public virtual ICollection<Treino>? Treinos { get; set; }
+        public virtual ICollection<ExecucaoTreino>? ExecucoesTreino { get; set; }
 
         // Relacionamento quando o usuário é TREINADOR (treinos criados por ele)
-        public virtual ICollection<Treino> TreinosCriados { get; set; }
+        public virtual ICollection<Treino>? TreinosCriados { get; set; }
     }
 
     public enum PerfilUser

@@ -33,8 +33,31 @@ namespace PROJETOMVC.Repositorio
 
         public async Task<Usuario> AdicionarAsync(Usuario usuario)
         {
-            usuario.DataCadastro = DateTime.Now;
-            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha); // Criptografa a senha
+            //Verifica se o CPF já está cadastrado
+            var cpfExistente = await _context.Usuarios
+                .AnyAsync(u => u.Cpf == usuario.Cpf);
+            if (cpfExistente)
+            {
+                throw new Exception("CPF já cadastrado!");
+            }
+            //Verifica se o email já está cadastrado
+            var emailExistente = await _context.Usuarios
+                .AnyAsync(u => u.Email == usuario.Email);
+            if (emailExistente)
+            {
+                throw new Exception("Email já cadastrado no sistema!");
+            }
+
+            // Define a data de cadastro como UTC
+            usuario.DataCadastro = DateTime.UtcNow;
+
+            // Criptografa a senha
+            usuario.Senha = BCrypt.Net.BCrypt.HashPassword(usuario.Senha);
+
+            // Converte todas as datas opcionais para UTC, se existirem
+            usuario.DataNascimento = ToUtc(usuario.DataNascimento);
+            usuario.DataMatricula = ToUtc(usuario.DataMatricula);
+
             await _context.Usuarios.AddAsync(usuario);
             await _context.SaveChangesAsync();
             return usuario;
@@ -75,6 +98,15 @@ namespace PROJETOMVC.Repositorio
         {
            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id) 
                ?? throw new Exception("Usuário não encontrado!");
+        }
+
+
+        // Função auxiliar para converter uma data para UTC
+        private static DateTime? ToUtc(DateTime? data)
+        {
+            if (!data.HasValue) return null;
+
+            return DateTime.SpecifyKind(data.Value, DateTimeKind.Utc);
         }
     }
 }

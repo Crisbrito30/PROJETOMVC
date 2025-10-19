@@ -50,6 +50,17 @@ namespace PROJETOMVC.Controllers
             }
             catch (Exception ex)
             {
+                var mensagem = ex.Message;
+
+                //Trata erros específicos de CPF ou Email já cadastrado
+                if (ex.InnerException?.Message?.Contains("IX_Usuarios_Cpf") == true)
+                {
+                    mensagem = "CPF já cadastrado no sistema!";
+                }
+                else if (ex.InnerException?.Message?.Contains("IX_Usuarios_Email") == true)
+                {
+                    mensagem = "Email já cadastrado no sistema!";
+                }
                 var inner = ex.InnerException?.Message ?? "Sem detalhes internos";
                 TempData["MensagemErro"] = $"Erro ao cadastrar usuário: {ex.Message} → Detalhes: {inner}";
             }

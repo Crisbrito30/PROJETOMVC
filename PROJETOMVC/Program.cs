@@ -1,6 +1,7 @@
 ﻿using AcademiaApp.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using PROJETOMVC.Repositorio;
 
 // outros usings...
 
@@ -12,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AcademiaContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
 
-
+builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
 
 builder.Services.AddSession(options =>
@@ -37,6 +38,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
 
 if (!app.Environment.IsDevelopment())
 {
