@@ -1,0 +1,31 @@
+﻿<div class="modal fade" id="modalDeletar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Deletar" method="post">
+                <input type="hidden" id="deleteId" name="id" />
+                <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>
+                        Tem certeza que deseja excluir o treino <strong id="deleteNome"></strong>?
+                    </div>
+                    <p class="mb-0 text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Esta ação não pode ser desfeita. Todos os exercícios e execuções relacionados a este treino serão removidos.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-2"></i>Sim, Excluir
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

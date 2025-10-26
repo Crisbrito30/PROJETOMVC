@@ -1,0 +1,101 @@
+﻿@using PROJETOMVC.Repositorio
+@inject IUsuarioRepositorio usuarioRepositorio
+
+@{
+    var usuarios = await usuarioRepositorio.BuscarTodosAsync();
+    var alunos = usuarios.Where(u => u.PerfilUser == AcademiaApp.Models.PerfilUser.Aluno);
+}
+
+<div class="modal fade" id="modalAdicionar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-plus-circle me-2"></i>Novo Treino
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Adicionar" method="post">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label fw-semibold">Nome do Treino *</label>
+                            <input type="text" class="form-control" name="Nome" required placeholder="Ex: Treino A - Peito e Tríceps" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Status</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="Ativo" value="true" checked id="adicionarAtivo">
+                                <label class="form-check-label" for="adicionarAtivo">
+                                    Ativo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Descrição/Objetivo</label>
+                        <textarea class="form-control" name="Descricao" rows="3" maxlength="500" placeholder="Descreva o objetivo deste treino..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Nível *</label>
+                            <select class="form-select" name="Nivel" required>
+                                <option value="">Selecione...</option>
+                                <option value="1">Iniciante</option>
+                                <option value="2">Intermediário</option>
+                                <option value="3">Avançado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Tipo *</label>
+                            <select class="form-select" name="Tipo" required>
+                                <option value="">Selecione...</option>
+                                <option value="1">Hipertrofia</option>
+                                <option value="2">Emagrecimento</option>
+                                <option value="3">Condicionamento</option>
+                                <option value="4">Força Máxima</option>
+                                <option value="5">Funcional</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Aluno</label>
+                            <select class="form-select" name="UsuarioId">
+                                <option value="">Não atribuído</option>
+                                @foreach (var aluno in alunos)
+                                {
+                                    <option value="@aluno.Id">@aluno.Nome</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Data de Início</label>
+                            <input type="date" class="form-control" name="DataInicio" />
+                            <small class="text-muted">Quando o treino começa</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Data de Fim</label>
+                            <input type="date" class="form-control" name="DataFim" />
+                            <small class="text-muted">Duração recomendada: 8-12 semanas</small>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Nota:</strong> Após criar o treino, você poderá adicionar exercícios na tela de detalhes.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-2"></i>Cadastrar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

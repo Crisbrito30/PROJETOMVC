@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AcademiaContext>(options =>
 
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
+builder.Services.AddScoped<ITreinoRepositorio, TreinoRepositorio>();
 
 builder.Services.AddSession(options =>
 {

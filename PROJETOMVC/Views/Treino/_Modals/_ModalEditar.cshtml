@@ -1,0 +1,93 @@
+﻿@using PROJETOMVC.Repositorio
+@inject IUsuarioRepositorio usuarioRepositorio
+
+@{
+    var usuarios = await usuarioRepositorio.BuscarTodosAsync();
+    var alunos = usuarios.Where(u => u.PerfilUser == AcademiaApp.Models.PerfilUser.Aluno);
+}
+
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">
+                    <i class="bi bi-pencil me-2"></i>Editar Treino
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Atualizar" method="post">
+                <input type="hidden" id="editId" name="Id" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label fw-semibold">Nome do Treino *</label>
+                            <input type="text" class="form-control" id="editNome" name="Nome" required />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Status</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" id="editAtivo" name="Ativo" value="true">
+                                <label class="form-check-label" for="editAtivo">
+                                    Ativo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Descrição/Objetivo</label>
+                        <textarea class="form-control" id="editDescricao" name="Descricao" rows="3" maxlength="500"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Nível *</label>
+                            <select class="form-select" id="editNivel" name="Nivel" required>
+                                <option value="1">Iniciante</option>
+                                <option value="2">Intermediário</option>
+                                <option value="3">Avançado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Tipo *</label>
+                            <select class="form-select" id="editTipo" name="Tipo" required>
+                                <option value="1">Hipertrofia</option>
+                                <option value="2">Emagrecimento</option>
+                                <option value="3">Condicionamento</option>
+                                <option value="4">Força Máxima</option>
+                                <option value="5">Funcional</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Aluno</label>
+                            <select class="form-select" id="editUsuarioId" name="UsuarioId">
+                                <option value="">Não atribuído</option>
+                                @foreach (var aluno in alunos)
+                                {
+                                    <option value="@aluno.Id">@aluno.Nome</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Data de Início</label>
+                            <input type="date" class="form-control" id="editDataInicio" name="DataInicio" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold">Data de Fim</label>
+                            <input type="date" class="form-control" id="editDataFim" name="DataFim" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-circle me-2"></i>Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

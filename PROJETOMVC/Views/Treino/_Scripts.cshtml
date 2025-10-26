@@ -1,0 +1,20 @@
+﻿<script>
+    // Função para preparar edição do treino
+    function editarTreino(id, nome, descricao, nivel, tipo, dataInicio, dataFim, ativo, usuarioId) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editNome').value = nome;
+        document.getElementById('editDescricao').value = descricao || '';
+        document.getElementById('editNivel').value = nivel;
+        document.getElementById('editTipo').value = tipo;
+        document.getElementById('editDataInicio').value = dataInicio || '';
+        document.getElementById('editDataFim').value = dataFim || '';
+        document.getElementById('editAtivo').checked = ativo;
+        document.getElementById('editUsuarioId').value = usuarioId || '';
+    }
+
+    // Função para preparar exclusão do treino
+    function prepararDeletar(id, nome) {
+        document.getElementById('deleteId').value = id;
+        document.getElementById('deleteNome').textContent = nome;
+    }
+</script>
