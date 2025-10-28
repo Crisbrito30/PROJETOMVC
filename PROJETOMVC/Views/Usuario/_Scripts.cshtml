@@ -52,6 +52,7 @@
         const perfilSelect = document.getElementById('PerfilUserSelect');
         const camposAluno = document.getElementById('camposAluno');
         const camposTreinador = document.getElementById('camposTreinador');
+		const dataMAtricula = document.querySelector('input[name="DataMatricula"]');
 
         if (perfilSelect) {
             perfilSelect.addEventListener('change', function() {
@@ -64,6 +65,11 @@
                 // Mostra campos específicos baseado na seleção
                 if (perfil === '1') { // Aluno
                     camposAluno.classList.remove('d-none');
+
+					//preecher arguments dataCadastro automatico
+					const dataAtual = new Date().toISOString().split('T')[0];
+					dataMAtricula.value = dataAtual;
+
                 } else if (perfil === '2') { // Treinador
                     camposTreinador.classList.remove('d-none');
                 }
