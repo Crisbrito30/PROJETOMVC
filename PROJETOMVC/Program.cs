@@ -17,12 +17,15 @@ builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
 
 builder.Services.AddScoped<ITreinoRepositorio, TreinoRepositorio>();
 
+builder.Services.AddScoped<IExercicioRepositorio, ExercicioRepositorio>();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+
 
 // Configura autenticação por cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

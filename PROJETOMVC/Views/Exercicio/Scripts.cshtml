@@ -1,0 +1,17 @@
+﻿<script>
+    // Função para preparar edição do exercício
+    function editarExercicio(id, nome, descricao, grupoMuscular, videoUrl, ativo) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editNome').value = nome;
+        document.getElementById('editDescricao').value = descricao || '';
+        document.getElementById('editGrupoMuscular').value = grupoMuscular;
+        document.getElementById('editVideoUrl').value = videoUrl || '';
+        document.getElementById('editAtivo').checked = ativo;
+    }
+
+    // Função para preparar exclusão do exercício
+    function prepararDeletar(id, nome) {
+        document.getElementById('deleteId').value = id;
+        document.getElementById('deleteNome').textContent = nome;
+    }
+</script>

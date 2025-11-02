@@ -1,4 +1,5 @@
-﻿namespace PROJETOMVC.Enum
+﻿namespace PROJETOMVC.Enums
+
 {
     public enum PerfilEnum
     {

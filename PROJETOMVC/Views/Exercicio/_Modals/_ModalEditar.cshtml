@@ -1,0 +1,65 @@
+﻿<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content rounded-4">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">
+                    <i class="bi bi-pencil me-2"></i>Editar Exercício
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form asp-action="Atualizar" method="post">
+                <input type="hidden" id="editId" name="Id" />
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label fw-semibold">Nome do Exercício *</label>
+                            <input type="text" class="form-control" id="editNome" name="Nome" required />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label fw-semibold">Status</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" id="editAtivo" name="Ativo" value="true">
+                                <label class="form-check-label" for="editAtivo">
+                                    Ativo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Grupo Muscular *</label>
+                        <select class="form-select" id="editGrupoMuscular" name="GrupoMuscular" required>
+                            <option value="1">Peito</option>
+                            <option value="2">Costas</option>
+                            <option value="3">Ombros</option>
+                            <option value="4">Bíceps</option>
+                            <option value="5">Tríceps</option>
+                            <option value="6">Pernas</option>
+                            <option value="7">Glúteos</option>
+                            <option value="8">Abdômen</option>
+                            <option value="9">Panturrilha</option>
+                            <option value="10">Antebraço</option>
+                            <option value="11">Cardio</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Descrição</label>
+                        <textarea class="form-control" id="editDescricao" name="Descricao" rows="3" maxlength="500"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Link do Vídeo (YouTube)</label>
+                        <input type="url" class="form-control" id="editVideoUrl" name="VideoUrl" maxlength="200" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-check-circle me-2"></i>Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
