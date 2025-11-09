@@ -112,7 +112,7 @@ namespace PROJETOMVC.Repositorio
         public async Task<(List<UsuarioModel> usuarios, int total)> BuscarComFiltrosAsync(
             string? nome,
             string? email,
-            string? login,
+            string? cpf,
             string? perfil,
             DateTime? dataInicio,
             DateTime? dataFim,
@@ -130,8 +130,8 @@ namespace PROJETOMVC.Repositorio
             if (!string.IsNullOrWhiteSpace(email))
                 query = query.Where(u => u.Email.Contains(email));
 
-            if (!string.IsNullOrWhiteSpace(login))
-                query = query.Where(u => u.Login.Contains(login));
+            if (!string.IsNullOrWhiteSpace(cpf))
+                query = query.Where(u => u.Cpf.Contains(cpf));
 
             if (!string.IsNullOrWhiteSpace(perfil))
             {
@@ -153,7 +153,7 @@ namespace PROJETOMVC.Repositorio
             {
                 "nome" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Nome) : query.OrderBy(u => u.Nome),
                 "email" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email),
-                "login" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Login) : query.OrderBy(u => u.Login),
+                //"login" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Login) : query.OrderBy(u => u.Login),
                 "data" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.DataCadastro) : query.OrderBy(u => u.DataCadastro),
                 _ => query.OrderBy(u => u.Nome)
             };

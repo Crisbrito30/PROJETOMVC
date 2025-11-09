@@ -30,7 +30,7 @@ namespace PROJETOMVC.Controllers
                 var (usuarios, total) = await _usuarioRepositorio.BuscarComFiltrosAsync(
                  filtro.Nome,
                  filtro.Email,
-                 filtro.Login,
+                 filtro.Cpf,
                  filtro.PerfilUser,        // ✅ Ajuste se necessário
                  filtro.dataInical,        // ✅ Ajuste se necessário
                  filtro.dataFinal,         // ✅ Ajuste se necessário

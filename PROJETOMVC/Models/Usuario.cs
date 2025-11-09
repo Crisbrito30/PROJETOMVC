@@ -15,9 +15,7 @@ namespace AcademiaApp.Models
         [Display(Name = "Nome Completo")]
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "Login é obrigatório")]
-        [StringLength(50)]
-        public string Login { get; set; } = string.Empty;
+   
 
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Email inválido")]

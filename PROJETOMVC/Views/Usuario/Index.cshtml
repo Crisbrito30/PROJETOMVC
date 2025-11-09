@@ -39,8 +39,8 @@
                         <input type="email" class="form-control" asp-for="Email" placeholder="Buscar por email" />
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold">Login</label>
-                        <input type="text" class="form-control" asp-for="" placeholder="Buscar por login" />
+                        <label class="form-label fw-semibold">CPF</label>
+                        <input type="text" class="form-control" asp-for="Cpf" placeholder="Buscar por cpf" />
                     </div>
                     <div class="col-md-2">
                         <label class="form-label fw-semibold">Perfil</label>
@@ -150,7 +150,7 @@
                             {
                                 <tr>
                                     <td class="ps-4 fw-semibold">@usuario.Nome</td>
-                                    <td>@usuario.Login</td>
+                                    <td>@usuario.Cpf</td>
                                     <td>@usuario.Email</td>
                                     <td>
                                         @{
@@ -166,10 +166,10 @@
                                     <td>@usuario.DataCadastro.ToString("dd/MM/yyyy HH:mm")</td>
                                     <td class="text-center pe-4">
                                         <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalVisualizar" onclick="visualizarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Login', '@usuario.Email', '@usuario.PerfilUser', '@usuario.DataCadastro.ToString("dd/MM/yyyy")')">
+                                            <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalVisualizar" onclick="visualizarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser', '@usuario.DataCadastro.ToString("dd/MM/yyyy")')">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="editarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Login', '@usuario.Email', '@usuario.PerfilUser')">
+                                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="editarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser')">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalDeletar" onclick="prepararDeletar(@usuario.Id, '@usuario.Nome')">
@@ -271,19 +271,19 @@
 @section Scripts {
     <script>
         // Funções existentes
-        function visualizarUsuario(id, nome, login, email, perfil, data) {
+        function visualizarUsuario(id, nome, cpf, email, perfil, data) {
             document.getElementById('viewId').textContent = id;
             document.getElementById('viewNome').textContent = nome;
-            document.getElementById('viewLogin').textContent = login;
+            document.getElementById('viewCpf').textContent = cpf;
             document.getElementById('viewEmail').textContent = email;
             document.getElementById('viewPerfil').textContent = perfil;
             document.getElementById('viewData').textContent = data;
         }
 
-        function editarUsuario(id, nome, login, email, perfil) {
+        function editarUsuario(id, nome, cpf, email, perfil) {
             document.getElementById('editId').value = id;
             document.getElementById('editNome').value = nome;
-            document.getElementById('editLogin').value = login;
+            document.getElementById('editCpf').value = cpf;
             document.getElementById('editEmail').value = email;
 
             var perfilValor = '3';

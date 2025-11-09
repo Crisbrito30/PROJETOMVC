@@ -8,7 +8,7 @@ namespace PROJETOMVC.Models
         //Filtros
         public string? Nome { get; set; }
         public string? Email { get; set; }
-        public string? Login { get; set; }
+        public string? Cpf { get; set; }
         public string? PerfilUser { get; set; }
         public DateTime? dataInical { get; set; }
         public DateTime? dataFinal { get; set; }

@@ -18,7 +18,7 @@ namespace PROJETOMVC.Repositorio
         Task<(List<UsuarioModel> usuarios, int total)> BuscarComFiltrosAsync(
             string? nome,
             string? email,
-            string? login,
+            string? cpf,
             string? PerfilUser,
             DateTime? dataInicio,
             DateTime? dataFim,
