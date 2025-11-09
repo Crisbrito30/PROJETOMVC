@@ -24,7 +24,7 @@ namespace AcademiaApp.Models
         public int UsuarioId { get; set; }
 
         [ForeignKey("UsuarioId")]
-        public virtual Usuario Usuario { get; set; }
+        public virtual UsuarioModel Usuario { get; set; }
 
         [Required]
         [Display(Name = "Data da Execução")]

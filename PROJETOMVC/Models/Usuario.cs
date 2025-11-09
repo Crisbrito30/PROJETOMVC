@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AcademiaApp.Models
 {
-    public class Usuario
+    public class UsuarioModel
     {
         [Key]
         public int Id { get; set; }
@@ -14,6 +14,10 @@ namespace AcademiaApp.Models
         [StringLength(100)]
         [Display(Name = "Nome Completo")]
         public string Nome { get; set; }
+
+        [Required(ErrorMessage = "Login é obrigatório")]
+        [StringLength(50)]
+        public string Login { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "O email é obrigatório")]
         [EmailAddress(ErrorMessage = "Email inválido")]

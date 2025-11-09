@@ -15,25 +15,47 @@ namespace PROJETOMVC.Controllers
             _usuarioRepositorio = usuarioRepositorio;
         }
 
-        // GET: Usuario/Index - Lista todos os usuários
-        public async Task<IActionResult> Index()
+        // GET: Usuario/Index - Lista todos os usuários  com filtros e paginação
+        public async Task<IActionResult> Index(UsuarioFiltroViewModel filtro)
         {
             try
             {
-                var usuarios = await _usuarioRepositorio.BuscarTodosAsync();
-                return View(usuarios);
+                // Define valores padrão se não informados
+                filtro.PaginaAtual = filtro.PaginaAtual <= 0 ? 1 : filtro.PaginaAtual;
+                filtro.ItensPorPagina = filtro.ItensPorPagina <= 0 ? 10 : filtro.ItensPorPagina;
+                filtro.OrdenarPor ??= "Nome";
+                filtro.ordernarDirecao ??= "asc";
+
+                // Busca com filtros
+                var (usuarios, total) = await _usuarioRepositorio.BuscarComFiltrosAsync(
+                 filtro.Nome,
+                 filtro.Email,
+                 filtro.Login,
+                 filtro.PerfilUser,        // ✅ Ajuste se necessário
+                 filtro.dataInical,        // ✅ Ajuste se necessário
+                 filtro.dataFinal,         // ✅ Ajuste se necessário
+                 filtro.PaginaAtual,
+                 filtro.ItensPorPagina,
+                 filtro.OrdenarPor,
+                 filtro.ordernarDirecao    // ✅ Ajuste se necessário
+ );
+
+                filtro.Usuarios = usuarios;
+                filtro.TotalItens = total;
+
+                return View(filtro);
             }
             catch (Exception ex)
             {
                 TempData["MensagemErro"] = $"Erro ao buscar usuários: {ex.Message}";
-                return View(new List<Usuario>());
+                return View(new UsuarioFiltroViewModel());
             }
         }
 
         // POST: Usuario/Adicionar - Cria novo usuário
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Adicionar(Usuario usuario)
+        public async Task<IActionResult> Adicionar(UsuarioModel usuario)
         {
             try
             {
@@ -44,7 +66,7 @@ namespace PROJETOMVC.Controllers
                 }
                 else
                 {
-                    
+
                     TempData["MensagemErro"] = "Erro: Campos obrigatórios não preenchidos!";
                 }
             }
@@ -71,7 +93,7 @@ namespace PROJETOMVC.Controllers
         // POST: Usuario/Atualizar - Atualiza usuário existente
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Atualizar(Usuario usuario)
+        public async Task<IActionResult> Atualizar(UsuarioModel usuario)
         {
             try
             {

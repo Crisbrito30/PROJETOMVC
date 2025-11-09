@@ -12,7 +12,7 @@ namespace AcademiaApp.Data
         }
 
         // DbSets - Tabelas do banco
-        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<UsuarioModel> Usuarios { get; set; }
         public DbSet<Treino> Treinos { get; set; }
         public DbSet<Exercicio> Exercicios { get; set; }
         public DbSet<TreinoExercicio> TreinoExercicios { get; set; }
@@ -26,11 +26,11 @@ namespace AcademiaApp.Data
             // Configurações de relacionamentos e comportamentos
 
             // Usuario
-            modelBuilder.Entity<Usuario>()
+            modelBuilder.Entity<UsuarioModel>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            modelBuilder.Entity<Usuario>()
+            modelBuilder.Entity<UsuarioModel>()
                 .HasIndex(u => u.Cpf)
                 .IsUnique();
 
@@ -109,8 +109,8 @@ namespace AcademiaApp.Data
             // Exemplo: usuário administrador padrão, exercícios básicos, etc.
 
             // Exemplo de usuário administrador inicial
-            modelBuilder.Entity<Usuario>().HasData(
-                new Usuario
+            modelBuilder.Entity<UsuarioModel>().HasData(
+                new UsuarioModel
                 {
                     Id = 1,
                     Nome = "Administrador",

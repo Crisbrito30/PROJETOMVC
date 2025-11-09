@@ -2,7 +2,6 @@
 using AcademiaApp.Models;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace PROJETOMVC.Repositorio
 {
     public class UsuarioRepositorio : IUsuarioRepositorio
@@ -14,24 +13,24 @@ namespace PROJETOMVC.Repositorio
             _context = context;
         }
 
-        public async Task<Usuario?> BuscarPorLoginAsync(string emailOuLogin)
+        public async Task<UsuarioModel?> BuscarPorLoginAsync(string emailOuLogin)
         {
             // Aqui você pode usar login, email ou cpf dependendo de como o login é feito
             return await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Email == emailOuLogin || u.Cpf == emailOuLogin);
         }
 
-        public async Task<Usuario?> BuscarPorIdAsync(int id)
+        public async Task<UsuarioModel?> BuscarPorIdAsync(int id)
         {
             return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<IEnumerable<Usuario>> BuscarTodosAsync()
+        public async Task<IEnumerable<UsuarioModel>> BuscarTodosAsync()
         {
             return await _context.Usuarios.ToListAsync();
         }
 
-        public async Task<Usuario> AdicionarAsync(Usuario usuario)
+        public async Task<UsuarioModel> AdicionarAsync(UsuarioModel usuario)
         {
             //Verifica se o CPF já está cadastrado
             var cpfExistente = await _context.Usuarios
@@ -63,7 +62,7 @@ namespace PROJETOMVC.Repositorio
             return usuario;
         }
 
-        public async Task<Usuario> AtualizarAsync(Usuario usuario)
+        public async Task<UsuarioModel> AtualizarAsync(UsuarioModel usuario)
         {
             var usuarioBanco = await BuscarPorIdAsync(usuario.Id);
 
@@ -94,10 +93,10 @@ namespace PROJETOMVC.Repositorio
             return true;
         }
 
-        public async Task<Usuario> ListarPorIdAsync(int id)
+        public async Task<UsuarioModel> ListarPorIdAsync(int id)
         {
-           return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id) 
-               ?? throw new Exception("Usuário não encontrado!");
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id)
+                ?? throw new Exception("Usuário não encontrado!");
         }
 
 
@@ -107,6 +106,66 @@ namespace PROJETOMVC.Repositorio
             if (!data.HasValue) return null;
 
             return DateTime.SpecifyKind(data.Value, DateTimeKind.Utc);
+        }
+
+        //Buscar com filtro e paginação 
+        public async Task<(List<UsuarioModel> usuarios, int total)> BuscarComFiltrosAsync(
+            string? nome,
+            string? email,
+            string? login,
+            string? perfil,
+            DateTime? dataInicio,
+            DateTime? dataFim,
+            int pagina,
+            int itensPorPagina,
+            string ordenarPor,
+            string direcaoOrdem)
+        {
+            var query = _context.Usuarios.AsQueryable();
+
+            // Aplicar filtros
+            if (!string.IsNullOrWhiteSpace(nome))
+                query = query.Where(u => u.Nome.Contains(nome));
+
+            if (!string.IsNullOrWhiteSpace(email))
+                query = query.Where(u => u.Email.Contains(email));
+
+            if (!string.IsNullOrWhiteSpace(login))
+                query = query.Where(u => u.Login.Contains(login));
+
+            if (!string.IsNullOrWhiteSpace(perfil))
+            {
+                if (int.TryParse(perfil, out int perfilInt))
+                    query = query.Where(u => (int)u.PerfilUser == perfilInt);
+            }
+
+            if (dataInicio.HasValue)
+                query = query.Where(u => u.DataCadastro.Date >= dataInicio.Value.Date);
+
+            if (dataFim.HasValue)
+                query = query.Where(u => u.DataCadastro.Date <= dataFim.Value.Date);
+
+            // Total de registros (antes da paginação)
+            var total = await query.CountAsync();
+
+            // Aplicar ordenação
+            query = ordenarPor?.ToLower() switch
+            {
+                "nome" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Nome) : query.OrderBy(u => u.Nome),
+                "email" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Email) : query.OrderBy(u => u.Email),
+                "login" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.Login) : query.OrderBy(u => u.Login),
+                "data" => direcaoOrdem == "desc" ? query.OrderByDescending(u => u.DataCadastro) : query.OrderBy(u => u.DataCadastro),
+                _ => query.OrderBy(u => u.Nome)
+            };
+
+            // Aplicar paginação
+            var usuarios = await query
+                .Skip((pagina - 1) * itensPorPagina)
+                .Take(itensPorPagina)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return (usuarios, total);
         }
     }
 }

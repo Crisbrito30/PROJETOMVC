@@ -46,14 +46,14 @@ namespace AcademiaApp.Models
         public int? UsuarioId { get; set; }
 
         [ForeignKey("UsuarioId")]
-        public virtual Usuario? Usuario { get; set; }
+        public virtual UsuarioModel? Usuario { get; set; }
 
         // Relacionamento com Usuario (TREINADOR que criou o treino)
         [Display(Name = "Criado por")]
         public int? CriadoPorId { get; set; }
 
         [ForeignKey("CriadoPorId")]
-        public virtual Usuario? CriadoPor { get; set; }
+        public virtual UsuarioModel? CriadoPor { get; set; }
 
         // Relacionamento com os exercícios do treino
         public virtual ICollection<TreinoExercicio>? TreinoExercicios { get; set; }

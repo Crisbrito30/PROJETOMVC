@@ -6,12 +6,27 @@ namespace PROJETOMVC.Repositorio
 {
     public interface IUsuarioRepositorio
     {
-        Task<Usuario> ListarPorIdAsync(int id);
-        Task<Usuario?> BuscarPorLoginAsync(string emailOuLogin);
-        Task<Usuario?> BuscarPorIdAsync(int id);
-        Task<IEnumerable<Usuario>> BuscarTodosAsync();
-        Task<Usuario> AdicionarAsync(Usuario usuario);
-        Task<Usuario> AtualizarAsync(Usuario usuario);
+        Task<UsuarioModel> ListarPorIdAsync(int id);
+        Task<UsuarioModel?> BuscarPorLoginAsync(string emailOuLogin);
+        Task<UsuarioModel?> BuscarPorIdAsync(int id);
+        Task<IEnumerable<UsuarioModel>> BuscarTodosAsync();
+        Task<UsuarioModel> AdicionarAsync(UsuarioModel usuario);
+        Task<UsuarioModel> AtualizarAsync(UsuarioModel usuario);
         Task<bool> DeletarAsync(int id);
+
+        //Paginação e busca específica
+        Task<(List<UsuarioModel> usuarios, int total)> BuscarComFiltrosAsync(
+            string? nome,
+            string? email,
+            string? login,
+            string? PerfilUser,
+            DateTime? dataInicio,
+            DateTime? dataFim,
+            int pagina,
+            int itensPorPagina,
+            string ordenarPor,
+            string direcaoOrdem
+        );
+
     }
 }
