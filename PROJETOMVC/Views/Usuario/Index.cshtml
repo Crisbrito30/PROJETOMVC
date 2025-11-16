@@ -5,45 +5,52 @@
 }
 
 <div class="container-fluid px-4">
+    <!-- HEADER -->
     <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
-        <h2 class="mb-0">
-            <i class="bi bi-people-fill me-2"></i>Usuários
-            <span class="badge bg-primary ms-2">@Model.TotalItens</span>
-        </h2>
-        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#modalAdicionar">
-            <i class="bi bi-plus-circle me-2"></i>Novo Usuário
+        <div class="d-flex align-items-center gap-3">
+            <h2 class="mb-0 fw-bold">
+                <i class="bi bi-people-fill me-2 text-primary"></i>Usuários
+            </h2>
+            <span class="badge bg-primary fs-6">@Model.TotalItens</span>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdicionar">
+            <i class="bi bi-plus-circle"></i>
+            <span>Novo Usuário</span>
         </button>
     </div>
 
     <partial name="_Mensagens" />
 
     <!-- FILTROS -->
-    <div class="card shadow-sm rounded-4 border-0 mb-4">
-        <div class="card-header bg-light">
-            <h5 class="mb-0">
-                <i class="bi bi-funnel me-2"></i>Filtros de Pesquisa
-                <button type="button" class="btn btn-sm btn-outline-secondary float-end" onclick="limparFiltros()">
-                    <i class="bi bi-x-circle me-1"></i>Limpar
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-funnel me-2"></i>Filtros de Pesquisa
+                </h5>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="limparFiltros()">
+                    <i class="bi bi-x-circle"></i>
+                    <span>Limpar</span>
                 </button>
-            </h5>
+            </div>
         </div>
         <div class="card-body">
             <form asp-action="Index" method="get" id="formFiltros">
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Nome</label>
+                        <label class="form-label">Nome</label>
                         <input type="text" class="form-control" asp-for="Nome" placeholder="Buscar por nome" />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Email</label>
+                        <label class="form-label">Email</label>
                         <input type="email" class="form-control" asp-for="Email" placeholder="Buscar por email" />
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold">CPF</label>
+                        <label class="form-label">CPF</label>
                         <input type="text" class="form-control" asp-for="Cpf" placeholder="Buscar por cpf" />
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold">Perfil</label>
+                        <label class="form-label">Perfil</label>
                         <select class="form-select" asp-for="PerfilUser">
                             <option value="">Todos</option>
                             <option value="1">Admin</option>
@@ -52,7 +59,7 @@
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold">Itens/Página</label>
+                        <label class="form-label">Itens/Página</label>
                         <select class="form-select" asp-for="ItensPorPagina" onchange="this.form.submit()">
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -61,21 +68,23 @@
                         </select>
                     </div>
                 </div>
-                <div class="row g-3 mt-2">
+                <div class="row g-3 mt-1">
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Data Início</label>
+                        <label class="form-label">Data Início</label>
                         <input type="date" class="form-control" asp-for="dataInical" />
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Data Fim</label>
+                        <label class="form-label">Data Fim</label>
                         <input type="date" class="form-control" asp-for="dataFinal" />
                     </div>
-                    <div class="col-md-6 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary me-2">
-                            <i class="bi bi-search me-2"></i>Pesquisar
+                    <div class="col-md-6 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i>
+                            <span>Pesquisar</span>
                         </button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-counterclockwise me-2"></i>Resetar
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                            <span>Resetar</span>
                         </a>
                     </div>
                 </div>
@@ -89,58 +98,58 @@
     </div>
 
     <!-- TABELA DE USUÁRIOS -->
-    <div class="card shadow-sm rounded-4 border-0">
+    <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead>
                         <tr>
                             <th class="ps-4">
-                                <a href="javascript:void(0)" onclick="ordenar('Nome')" class="text-decoration-none text-dark">
+                                <a href="javascript:void(0)" onclick="ordenar('Nome')" class="text-decoration-none">
                                     Nome
                                     @if (Model.OrdenarPor == "Nome")
                                     {
-                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down")"></i>
+                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down") ms-1"></i>
                                     }
                                 </a>
                             </th>
                             <th>
-                                <a href="javascript:void(0)" onclick="ordenar('Login')" class="text-decoration-none text-dark">
+                                <a href="javascript:void(0)" onclick="ordenar('Login')" class="text-decoration-none">
                                     Login
                                     @if (Model.OrdenarPor == "Login")
                                     {
-                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down")"></i>
+                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down") ms-1"></i>
                                     }
                                 </a>
                             </th>
                             <th>
-                                <a href="javascript:void(0)" onclick="ordenar('Email')" class="text-decoration-none text-dark">
+                                <a href="javascript:void(0)" onclick="ordenar('Email')" class="text-decoration-none">
                                     Email
                                     @if (Model.OrdenarPor == "Email")
                                     {
-                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down")"></i>
+                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down") ms-1"></i>
                                     }
                                 </a>
                             </th>
                             <th>
-                                <a href="javascript:void(0)" onclick="ordenar('Perfil')" class="text-decoration-none text-dark">
+                                <a href="javascript:void(0)" onclick="ordenar('Perfil')" class="text-decoration-none">
                                     Perfil
                                     @if (Model.OrdenarPor == "Perfil")
                                     {
-                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down")"></i>
+                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down") ms-1"></i>
                                     }
                                 </a>
                             </th>
                             <th>
-                                <a href="javascript:void(0)" onclick="ordenar('Data')" class="text-decoration-none text-dark">
+                                <a href="javascript:void(0)" onclick="ordenar('Data')" class="text-decoration-none">
                                     Data de Cadastro
                                     @if (Model.OrdenarPor == "Data")
                                     {
-                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down")"></i>
+                                        <i class="bi bi-arrow-@(Model.ordernarDirecao == "asc" ? "up" : "down") ms-1"></i>
                                     }
                                 </a>
                             </th>
-                            <th class="text-center pe-4" style="width: 180px;">Ações</th>
+                            <th class="text-center pe-4" style="min-width: 180px;">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,9 +158,15 @@
                             foreach (var usuario in Model.Usuarios)
                             {
                                 <tr>
-                                    <td class="ps-4 fw-semibold">@usuario.Nome</td>
-                                    <td>@usuario.Cpf</td>
-                                    <td>@usuario.Email</td>
+                                    <td class="ps-4">
+                                        <span class="fw-semibold">@usuario.Nome</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-secondary">@usuario.Cpf</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-secondary">@usuario.Email</span>
+                                    </td>
                                     <td>
                                         @{
                                             var badgeClass = usuario.PerfilUser switch
@@ -163,16 +178,33 @@
                                         }
                                         <span class="badge @badgeClass">@usuario.PerfilUser</span>
                                     </td>
-                                    <td>@usuario.DataCadastro.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        <span class="text-secondary">@usuario.DataCadastro.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </td>
                                     <td class="text-center pe-4">
-                                        <div class="btn-group" role="group">
-                                            <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal" data-bs-target="#modalVisualizar" onclick="visualizarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser', '@usuario.DataCadastro.ToString("dd/MM/yyyy")')">
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <button type="button"
+                                                    class="btn btn-info btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalVisualizar"
+                                                    onclick="visualizarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser', '@usuario.DataCadastro.ToString("dd/MM/yyyy")')"
+                                                    title="Visualizar">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="editarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser')">
+                                            <button type="button"
+                                                    class="btn btn-warning btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditar"
+                                                    onclick="editarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser')"
+                                                    title="Editar">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalDeletar" onclick="prepararDeletar(@usuario.Id, '@usuario.Nome')">
+                                            <button type="button"
+                                                    class="btn btn-danger btn-sm"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalDeletar"
+                                                    onclick="prepararDeletar(@usuario.Id, '@usuario.Nome')"
+                                                    title="Deletar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -184,8 +216,11 @@
                         {
                             <tr>
                                 <td colspan="6" class="text-center py-5">
-                                    <i class="bi bi-inbox display-1 text-muted"></i>
-                                    <p class="mt-3 text-muted">Nenhum usuário encontrado com os filtros aplicados.</p>
+                                    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px;">
+                                        <i class="bi bi-inbox display-1 text-secondary opacity-50 mb-3"></i>
+                                        <h5 class="text-secondary mb-2">Nenhum usuário encontrado</h5>
+                                        <p class="text-secondary mb-0">Tente ajustar os filtros de pesquisa</p>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -197,12 +232,12 @@
         <!-- PAGINAÇÃO -->
         @if (Model.TotalPaginas > 1)
         {
-            <div class="card-footer bg-light">
-                <div class="d-flex justify-content-between align-items-center">
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div>
-                        <small class="text-muted">
-                            Mostrando @((Model.PaginaAtual - 1) * Model.ItensPorPagina + 1) 
-                            a @(Math.Min(Model.PaginaAtual * Model.ItensPorPagina, Model.TotalItens)) 
+                        <small class="text-secondary fw-medium">
+                            Mostrando @((Model.PaginaAtual - 1) * Model.ItensPorPagina + 1)
+                            a @(Math.Min(Model.PaginaAtual * Model.ItensPorPagina, Model.TotalItens))
                             de @Model.TotalItens registros
                         </small>
                     </div>
@@ -210,14 +245,14 @@
                         <ul class="pagination pagination-sm mb-0">
                             <!-- Primeira página -->
                             <li class="page-item @(!Model.TemPaginaAnterior ? "disabled" : "")">
-                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(1)">
+                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(1)" title="Primeira página">
                                     <i class="bi bi-chevron-double-left"></i>
                                 </a>
                             </li>
 
                             <!-- Página anterior -->
                             <li class="page-item @(!Model.TemPaginaAnterior ? "disabled" : "")">
-                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(@(Model.PaginaAtual - 1))">
+                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(@(Model.PaginaAtual - 1))" title="Página anterior">
                                     <i class="bi bi-chevron-left"></i>
                                 </a>
                             </li>
@@ -232,14 +267,14 @@
 
                             <!-- Próxima página -->
                             <li class="page-item @(!Model.TemProximaPagina ? "disabled" : "")">
-                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(@(Model.PaginaAtual + 1))">
+                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(@(Model.PaginaAtual + 1))" title="Próxima página">
                                     <i class="bi bi-chevron-right"></i>
                                 </a>
                             </li>
 
                             <!-- Última página -->
                             <li class="page-item @(!Model.TemProximaPagina ? "disabled" : "")">
-                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(@Model.TotalPaginas)">
+                                <a class="page-link" href="javascript:void(0)" onclick="irParaPagina(@Model.TotalPaginas)" title="Última página">
                                     <i class="bi bi-chevron-double-right"></i>
                                 </a>
                             </li>
@@ -251,80 +286,90 @@
     </div>
 </div>
 
-<!-- MODAIS (os mesmos que você já tem) -->
-<div class="modal fade" id="modalAdicionar" tabindex="-1" aria-hidden="true">
-    <!-- Seu modal de adicionar existente -->
-</div>
+@* Modais separados *@
+<partial name="_Modals/_ModalAdicionar" />
+<partial name="_Modals/_ModalEditar" />
+<partial name="_Modals/_ModalDeletar" />
+<partial name="_Modals/_ModalDetalhes" />
 
-<div class="modal fade" id="modalVisualizar" tabindex="-1" aria-hidden="true">
-    <!-- Seu modal de visualizar existente -->
-</div>
+<partial name="_Scripts" />
 
-<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-    <!-- Seu modal de editar existente -->
-</div>
+<style>
+    /* Estilos específicos para esta página */
+    .table thead a {
+        color: var(--text-primary);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
 
-<div class="modal fade" id="modalDeletar" tabindex="-1" aria-hidden="true">
-    <!-- Seu modal de deletar existente -->
-</div>
-
-@section Scripts {
-    <script>
-        // Funções existentes
-        function visualizarUsuario(id, nome, cpf, email, perfil, data) {
-            document.getElementById('viewId').textContent = id;
-            document.getElementById('viewNome').textContent = nome;
-            document.getElementById('viewCpf').textContent = cpf;
-            document.getElementById('viewEmail').textContent = email;
-            document.getElementById('viewPerfil').textContent = perfil;
-            document.getElementById('viewData').textContent = data;
+        .table thead a:hover {
+            color: var(--primary-color);
         }
 
-        function editarUsuario(id, nome, cpf, email, perfil) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editNome').value = nome;
-            document.getElementById('editCpf').value = cpf;
-            document.getElementById('editEmail').value = email;
+    .table tbody tr {
+        border-bottom: 1px solid var(--border-color);
+    }
 
-            var perfilValor = '3';
-            if (perfil === 'Admin') perfilValor = '1';
-            else if (perfil === 'Gestor') perfilValor = '2';
-            else if (perfil === 'Padrao') perfilValor = '3';
-
-            document.getElementById('editPerfil').value = perfilValor;
+        .table tbody tr:last-child {
+            border-bottom: none;
         }
 
-        function prepararDeletar(id, nome) {
-            document.getElementById('deleteId').value = id;
-            document.getElementById('deleteNome').textContent = nome;
+    .pagination .page-link {
+        color: var(--text-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: var(--border-radius-sm);
+        margin: 0 2px;
+        transition: all var(--transition-speed) ease;
+    }
+
+        .pagination .page-link:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            background-color: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
         }
 
-        // ✅ NOVAS FUNÇÕES PARA PAGINAÇÃO E ORDENAÇÃO
-        function irParaPagina(pagina) {
-            document.querySelector('input[name="PaginaAtual"]').value = pagina;
-            document.getElementById('formFiltros').submit();
+    .pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+    }
+
+    .pagination .page-item.disabled .page-link {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .badge {
+        font-size: 0.813rem;
+        padding: 0.375rem 0.75rem;
+        font-weight: 600;
+    }
+
+    /* Botões de ação compactos */
+    .btn-sm {
+        padding: 0.375rem 0.625rem;
+        font-size: 0.875rem;
+    }
+
+        .btn-sm i {
+            font-size: 1rem;
         }
 
-        function ordenar(campo) {
-            const ordenarPorInput = document.querySelector('input[name="OrdenarPor"]');
-            const direcaoOrdemInput = document.querySelector('input[name="DirecaoOrdem"]');
-            
-            if (ordenarPorInput.value === campo) {
-                // Inverte a direção
-                direcaoOrdemInput.value = direcaoOrdemInput.value === 'asc' ? 'desc' : 'asc';
-            } else {
-                // Novo campo, começa com ascendente
-                ordenarPorInput.value = campo;
-                direcaoOrdemInput.value = 'asc';
-            }
-            
-            // Volta para primeira página ao ordenar
-            document.querySelector('input[name="PaginaAtual"]').value = 1;
-            document.getElementById('formFiltros').submit();
-        }
+    /* Card header melhorado */
+    .card-header {
+        border-bottom: 2px solid var(--border-color);
+        background-color: var(--light-color);
+    }
 
-        function limparFiltros() {
-            window.location.href = '@Url.Action("Index", "Usuario")';
+    /* Animação suave no hover das linhas */
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+        .table tbody tr:hover {
+            background-color: rgba(99, 102, 241, 0.02);
         }
-    </script>
-}
+</style>
