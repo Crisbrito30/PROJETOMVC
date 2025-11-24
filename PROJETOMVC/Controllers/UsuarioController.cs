@@ -97,9 +97,10 @@ namespace PROJETOMVC.Controllers
         {
             try
             {
+                ModelState.Remove(nameof(UsuarioModel.Senha));
                 if (ModelState.IsValid)
                 {
-                    ModelState.Remove("Senha");
+                  
 
                     await _usuarioRepositorio.AtualizarAsync(usuario);
                     TempData["MensagemSucesso"] = "Usuário atualizado com sucesso!";

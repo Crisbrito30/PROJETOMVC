@@ -173,10 +173,19 @@
                                             {
                                                 AcademiaApp.Models.PerfilUser.Administrador => "bg-danger",
                                                 AcademiaApp.Models.PerfilUser.Aluno => "bg-warning text-dark",
-                                                _ => "bg-primary"
+                                                AcademiaApp.Models.PerfilUser.Treinador => "bg-primary",
+                                                _ => "bg-secondary"
+                                            };
+
+                                            var perfilNome = usuario.PerfilUser switch
+                                            {
+                                                AcademiaApp.Models.PerfilUser.Aluno => "Aluno",
+                                                AcademiaApp.Models.PerfilUser.Treinador => "Treinador",
+                                                AcademiaApp.Models.PerfilUser.Administrador => "Administrador",
+                                                _ => "Padrão"
                                             };
                                         }
-                                        <span class="badge @badgeClass">@usuario.PerfilUser</span>
+                                        <span class="badge @badgeClass">@perfilNome</span>
                                     </td>
                                     <td>
                                         <span class="text-secondary">@usuario.DataCadastro.ToString("dd/MM/yyyy HH:mm")</span>
@@ -187,7 +196,7 @@
                                                     class="btn btn-info btn-sm"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalVisualizar"
-                                                    onclick="visualizarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser', '@usuario.DataCadastro.ToString("dd/MM/yyyy")')"
+                                                    onclick='visualizarUsuario(@Html.Raw(Json.Serialize(usuario)))'
                                                     title="Visualizar">
                                                 <i class="bi bi-eye"></i>
                                             </button>
@@ -195,7 +204,7 @@
                                                     class="btn btn-warning btn-sm"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalEditar"
-                                                    onclick="editarUsuario(@usuario.Id, '@usuario.Nome', '@usuario.Cpf', '@usuario.Email', '@usuario.PerfilUser')"
+                                                    onclick='editarUsuario(@Html.Raw(Json.Serialize(usuario)))'
                                                     title="Editar">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
@@ -203,7 +212,7 @@
                                                     class="btn btn-danger btn-sm"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#modalDeletar"
-                                                    onclick="prepararDeletar(@usuario.Id, '@usuario.Nome')"
+                                                    onclick='prepararDeletar(@Html.Raw(Json.Serialize(usuario)))'
                                                     title="Deletar">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -285,6 +294,7 @@
         }
     </div>
 </div>
+<partial name="_Scripts" />
 
 @* Modais separados *@
 <partial name="_Modals/_ModalAdicionar" />
@@ -292,9 +302,9 @@
 <partial name="_Modals/_ModalDeletar" />
 <partial name="_Modals/_ModalDetalhes" />
 
-<partial name="_Scripts" />
 
-<style>
+
+@* <style>
     /* Estilos específicos para esta página */
     .table thead a {
         color: var(--text-primary);
@@ -372,4 +382,4 @@
         .table tbody tr:hover {
             background-color: rgba(99, 102, 241, 0.02);
         }
-</style>
+</style> *@

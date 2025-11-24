@@ -1,126 +1,150 @@
-﻿@section Scripts {
-    <script>
-        // ========================================
-        // FUNÇÕES DE VISUALIZAÇÃO E EDIÇÃO
-        // ========================================
+﻿<script>
+		// ========================================
+		// FUNÇÕES DE VISUALIZAÇÃO E EDIÇÃO
+		// ========================================
+		// Função para visualizar detalhes do usuário
+		function visualizarUsuario(u) {
+			console.log('Dados recebidos:', u);
 
-        // Função para visualizar detalhes do usuário
-        function visualizarUsuario(id, nome, cpf, email, perfil, data) {
-            document.getElementById('viewId').textContent = id;
-            document.getElementById('viewNome').textContent = nome || '-';
-            document.getElementById('viewCpf').textContent = cpf || '-';
-            document.getElementById('viewEmail').textContent = email || '-';
-            document.getElementById('viewData').textContent = data || '-';
+			document.getElementById("viewId").textContent = u.id ?? "-";
+			document.getElementById("viewStatus").textContent = u.ativo ? "Ativo" : "Inativo";
+			document.getElementById("viewNome").textContent = u.nome ?? "-";
 
-            // Perfil com badge
-            let perfilHtml = '';
-            let badgeClass = 'bg-primary';
+			// Perfil
+			let badgeClass = "bg-primary";
+			let perfilTexto = "";
+			switch (u.perfilUser) {
+				case 1:
+					perfilTexto = "Aluno";
+					badgeClass = "bg-warning text-dark";
+					break;
+				case 2:
+					perfilTexto = "Treinador";
+					badgeClass = "bg-primary";
+					break;
+				case 3:
+					perfilTexto = "Administrador";
+					badgeClass = "bg-danger";
+					break;
+				default:
+					perfilTexto = "Padrão";
+					break;
+			}
+			document.getElementById("viewTipoUsuario").innerHTML =`<span class="badge ${badgeClass}">${perfilTexto}</span>`;
 
-            if (perfil === 'Administrador') {
-                badgeClass = 'bg-danger';
-            } else if (perfil === 'Treinador') {
-                badgeClass = 'bg-warning text-dark';
-            } else if (perfil === 'Aluno') {
-                badgeClass = 'bg-primary';
-            }
+			document.getElementById("viewEmail").textContent = u.email ?? "-";
+			document.getElementById("viewCpf").textContent = u.cpf ?? "-";
+			document.getElementById("viewTelefone").textContent = u.telefone ?? "-";
 
-            perfilHtml = `<span class="badge ${badgeClass}">${perfil}</span>`;
-            document.getElementById('viewPerfil').innerHTML = perfilHtml;
-        }
+			document.getElementById("viewDataNascimento").textContent = u.dataNascimento
+					? new Date(u.dataNascimento).toLocaleDateString("pt-BR")
+					: "-";
 
-        // Função para preparar edição do usuário
-        function editarUsuario(id, nome, cpf, email, perfil) {
-            document.getElementById('editId').value = id;
-            document.getElementById('editNome').value = nome;
-            document.getElementById('editCpf').value = cpf;
-            document.getElementById('editEmail').value = email;
+			document.getElementById("viewEndereco").textContent = u.endereco ?? "-";
 
-            // Mapeia o perfil para o valor correto do Enum
-            var perfilValor = '3'; // Padrão (Aluno)
-            if (perfil === 'Administrador') perfilValor = '0';
-            else if (perfil === 'Treinador') perfilValor = '2';
-            else if (perfil === 'Aluno') perfilValor = '1';
+			document.getElementById("viewDataCadastro").textContent = u.dataCadastro
+					? new Date(u.dataCadastro).toLocaleDateString("pt-BR") + " às " +
+					  new Date(u.dataCadastro).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })
+					: "-";
 
-            document.getElementById('editPerfil').value = perfilValor;
-        }
 
-        // Função para preparar exclusão do usuário
-        function prepararDeletar(id, nome) {
-            document.getElementById('deleteId').value = id;
-            document.getElementById('deleteNome').textContent = nome;
-        }
+		}
 
-        // ========================================
-        // FUNÇÕES DE PAGINAÇÃO E FILTROS
-        // ========================================
 
-        // Navegar para página específica
-        function irParaPagina(pagina) {
-            document.querySelector('input[name="PaginaAtual"]').value = pagina;
-            document.getElementById('formFiltros').submit();
-        }
 
-        // Ordenar tabela por coluna
-        function ordenar(campo) {
-            const ordenarPorInput = document.querySelector('input[name="OrdenarPor"]');
-            const direcaoOrdemInput = document.querySelector('input[name="ordernarDirecao"]');
+		// Função para preparar edição do usuário
+		function editarUsuario(u) {
+				document.getElementById("editId").value = u.id ?? u.Id;
+				document.getElementById("editNome").value = u.nome ?? u.Nome;
+				document.getElementById("editCpf").value = u.cpf ?? u.Cpf;
+				document.getElementById("editEmail").value = u.email ?? u.Email;
+				document.getElementById("editTelefone").value = u.telefone ?? u.Telefone;
 
-            if (ordenarPorInput.value === campo) {
-                // Inverte a direção se for a mesma coluna
-                direcaoOrdemInput.value = direcaoOrdemInput.value === 'asc' ? 'desc' : 'asc';
-            } else {
-                // Novo campo, começa com ascendente
-                ordenarPorInput.value = campo;
-                direcaoOrdemInput.value = 'asc';
-            }
+				// Perfil vem como número → perfeito
+				document.getElementById("editTipoUsuario").value = u.perfilUser ?? "";
+			document.getElementById("editAtivo").checked = u.ativo ?? false;
+		}
 
-            // Volta para primeira página ao ordenar
-            document.querySelector('input[name="PaginaAtual"]').value = 1;
-            document.getElementById('formFiltros').submit();
-        }
 
-        // Limpar todos os filtros
-        function limparFiltros() {
-            window.location.href = '@Url.Action("Index", "Usuario")';
-        }
+		// Função para preparar exclusão do usuário
+		function prepararDeletar(u) {
 
-        // ========================================
-        // CONTROLES DE CAMPOS CONDICIONAIS
-        // ========================================
+			document.getElementById("deleteId").value = u.id ?? u.Id;
+			document.getElementById("deleteNome").textContent = u.nome ?? u.Nome;
+		}
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const perfilSelect = document.getElementById('PerfilUserSelect');
-            const camposAluno = document.getElementById('camposAluno');
-            const camposTreinador = document.getElementById('camposTreinador');
-            const dataMatricula = document.querySelector('input[name="DataMatricula"]');
 
-            if (perfilSelect) {
-                perfilSelect.addEventListener('change', function() {
-                    const perfil = this.value;
+		// ========================================
+		// FUNÇÕES DE PAGINAÇÃO E FILTROS
+		// ========================================
 
-                    // Esconde todos os campos condicionais
-                    if (camposAluno) camposAluno.classList.add('d-none');
-                    if (camposTreinador) camposTreinador.classList.add('d-none');
+		// Navegar para página específica
+		function irParaPagina(pagina) {
+			document.querySelector('input[name="PaginaAtual"]').value = pagina;
+			document.getElementById('formFiltros').submit();
+		}
 
-                    // Mostra campos específicos baseado na seleção
-                    if (perfil === '1') { // Aluno
-                        if (camposAluno) {
-                            camposAluno.classList.remove('d-none');
+		// Ordenar tabela por coluna
+		function ordenar(campo) {
+			const ordenarPorInput = document.querySelector('input[name="OrdenarPor"]');
+			const direcaoOrdemInput = document.querySelector('input[name="ordernarDirecao"]');
 
-                            // Preenche data de matrícula automaticamente
-                            if (dataMatricula) {
-                                const dataAtual = new Date().toISOString().split('T')[0];
-                                dataMatricula.value = dataAtual;
-                            }
-                        }
-                    } else if (perfil === '2') { // Treinador
-                        if (camposTreinador) {
-                            camposTreinador.classList.remove('d-none');
-                        }
-                    }
-                    // Administrador (0) não tem campos específicos
-                });
-            }
-        });
-    </script>
+			if (ordenarPorInput.value === campo) {
+				// Inverte a direção se for a mesma coluna
+				direcaoOrdemInput.value = direcaoOrdemInput.value === 'asc' ? 'desc' : 'asc';
+			} else {
+				// Novo campo, começa com ascendente
+				ordenarPorInput.value = campo;
+				direcaoOrdemInput.value = 'asc';
+			}
+
+			// Volta para primeira página ao ordenar
+			document.querySelector('input[name="PaginaAtual"]').value = 1;
+			document.getElementById('formFiltros').submit();
+		}
+
+		// Limpar todos os filtros
+		function limparFiltros() {
+			window.location.href = '@Url.Action("Index", "Usuario")';
+		}
+
+		// ========================================
+		// CONTROLES DE CAMPOS CONDICIONAIS
+		// ========================================
+
+		document.addEventListener('DOMContentLoaded', function() {
+			const perfilSelect = document.getElementById('PerfilUserSelect');
+			const camposAluno = document.getElementById('camposAluno');
+			const camposTreinador = document.getElementById('camposTreinador');
+			const dataMatricula = document.querySelector('input[name="DataMatricula"]');
+
+			if (perfilSelect) {
+				perfilSelect.addEventListener('change', function() {
+					const perfil = this.value;
+
+					// Esconde todos os campos condicionais
+					if (camposAluno) camposAluno.classList.add('d-none');
+					if (camposTreinador) camposTreinador.classList.add('d-none');
+
+					// Mostra campos específicos baseado na seleção
+					if (perfil === '1') { // Aluno
+						if (camposAluno) {
+							camposAluno.classList.remove('d-none');
+
+							// Preenche data de matrícula automaticamente
+							if (dataMatricula) {
+								const dataAtual = new Date().toISOString().split('T')[0];
+								dataMatricula.value = dataAtual;
+							}
+						}
+					} else if (perfil === '2') { // Treinador
+						if (camposTreinador) {
+							camposTreinador.classList.remove('d-none');
+						}
+					}
+					// Administrador (0) não tem campos específicos
+				});
+			}
+		});
+</script>
 }
