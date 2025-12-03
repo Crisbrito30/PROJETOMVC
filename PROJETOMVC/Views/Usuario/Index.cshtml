@@ -171,9 +171,9 @@
                                         @{
                                             var badgeClass = usuario.PerfilUser switch
                                             {
-                                                AcademiaApp.Models.PerfilUser.Administrador => "bg-danger",
-                                                AcademiaApp.Models.PerfilUser.Aluno => "bg-warning text-dark",
-                                                AcademiaApp.Models.PerfilUser.Treinador => "bg-primary",
+                                                AcademiaApp.Models.PerfilUser.Administrador => "bg-danger bg-opacity-25 text-danger fw-bold p-2",
+                                                AcademiaApp.Models.PerfilUser.Aluno => "bg-success bg-opacity-25 text-success fw-bold p-2",
+                                                AcademiaApp.Models.PerfilUser.Treinador => "bg-primary bg-opacity-25 text-primary fw-bold p-2",
                                                 _ => "bg-secondary"
                                             };
 

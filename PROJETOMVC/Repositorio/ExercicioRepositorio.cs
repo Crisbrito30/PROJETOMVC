@@ -79,16 +79,11 @@ namespace PROJETOMVC.Repositorio
                 .ToListAsync();
 
         }
-                
-        public async Task<IEnumerable<Exercicio>> BuscarPorNomeAsync(string nome)
-        {
-            return await _context.Exercicios
+
+        public async Task<IEnumerable<Exercicio>> BuscarPorNomeAsync(string nome) => await _context.Exercicios
                  .Where(e => e.Nome.Contains(nome))
                  .OrderBy(e => e.Nome)
-                 .AsAsyncEnumerable()
                  .ToListAsync();
-
-        }
 
         public async Task<IEnumerable<Exercicio>> BuscarTodosAsync()
         {

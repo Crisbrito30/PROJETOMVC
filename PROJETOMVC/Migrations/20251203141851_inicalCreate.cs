@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PROJETOMVC.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoSistemaTreinos : Migration
+    public partial class inicalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

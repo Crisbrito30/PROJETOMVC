@@ -16,21 +16,21 @@
 			switch (u.perfilUser) {
 				case 1:
 					perfilTexto = "Aluno";
-					badgeClass = "bg-warning text-dark";
+					badgeClass = "bg-success bg-opacity-25 text-success fw-bold p-2";
 					break;
 				case 2:
 					perfilTexto = "Treinador";
-					badgeClass = "bg-primary";
+					badgeClass = "bg-primary bg-opacity-25 text-primary fw-bold p-2";
 					break;
 				case 3:
 					perfilTexto = "Administrador";
-					badgeClass = "bg-danger";
+					badgeClass = "bg-danger bg-opacity-25 text-danger fw-bold p-2";
 					break;
 				default:
 					perfilTexto = "Padrão";
 					break;
 			}
-			document.getElementById("viewTipoUsuario").innerHTML =`<span class="badge ${badgeClass}">${perfilTexto}</span>`;
+			document.getElementById("viewTipoUsuario").innerHTML =`<span class="badge  ${badgeClass}">${perfilTexto}</span>`;
 
 			document.getElementById("viewEmail").textContent = u.email ?? "-";
 			document.getElementById("viewCpf").textContent = u.cpf ?? "-";

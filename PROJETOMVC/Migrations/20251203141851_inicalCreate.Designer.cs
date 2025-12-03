@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PROJETOMVC.Migrations
 {
     [DbContext(typeof(AcademiaContext))]
-    [Migration("20251016012154_CriacaoSistemaTreinos")]
-    partial class CriacaoSistemaTreinos
+    [Migration("20251203141851_inicalCreate")]
+    partial class inicalCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,7 +110,7 @@ namespace PROJETOMVC.Migrations
                     b.ToTable("Treinos");
                 });
 
-            modelBuilder.Entity("AcademiaApp.Models.Usuario", b =>
+            modelBuilder.Entity("AcademiaApp.Models.UsuarioModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -390,7 +390,7 @@ namespace PROJETOMVC.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AcademiaApp.Models.Usuario", "Usuario")
+                    b.HasOne("AcademiaApp.Models.UsuarioModel", "Usuario")
                         .WithMany("ExecucoesTreino")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -403,12 +403,12 @@ namespace PROJETOMVC.Migrations
 
             modelBuilder.Entity("AcademiaApp.Models.Treino", b =>
                 {
-                    b.HasOne("AcademiaApp.Models.Usuario", "CriadoPor")
+                    b.HasOne("AcademiaApp.Models.UsuarioModel", "CriadoPor")
                         .WithMany("TreinosCriados")
                         .HasForeignKey("CriadoPorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("AcademiaApp.Models.Usuario", "Usuario")
+                    b.HasOne("AcademiaApp.Models.UsuarioModel", "Usuario")
                         .WithMany("Treinos")
                         .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -468,7 +468,7 @@ namespace PROJETOMVC.Migrations
                     b.Navigation("TreinoExercicios");
                 });
 
-            modelBuilder.Entity("AcademiaApp.Models.Usuario", b =>
+            modelBuilder.Entity("AcademiaApp.Models.UsuarioModel", b =>
                 {
                     b.Navigation("ExecucoesTreino");
 
