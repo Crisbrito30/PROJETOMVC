@@ -56,6 +56,6 @@ namespace PROJETOMVC.Models
 
         [StringLength(10)]
         [Display(Name = "Divisão (A/B/C)")]
-        public string Divisao { get; set; } // Ex: "A", "B", "C"
+        public string? Divisao { get; set; } // Ex: "A", "B", "C"
     }
 }

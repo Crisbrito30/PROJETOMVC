@@ -2,6 +2,7 @@
 using AcademiaApp.Models;
 using Microsoft.EntityFrameworkCore;
 using PROJETOMVC.Models.Enums;
+using PROJETOMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -172,6 +173,14 @@ namespace PROJETOMVC.Repositorio
                 .Include(t => t.Execucoes)
                     .ThenInclude(e => e.Usuario)
                 .FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        // Adiciona um exercício ao treino (persistência centralizada no repositório)
+        public async Task<TreinoExercicio> AdicionarTreinoExercicioAsync(TreinoExercicio treinoExercicio)
+        {
+            await _context.TreinoExercicios.AddAsync(treinoExercicio);
+            await _context.SaveChangesAsync();
+            return treinoExercicio;
         }
     }
 }

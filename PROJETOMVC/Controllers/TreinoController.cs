@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using PROJETOMVC.Repositorio;
 using AcademiaApp.Models;
+using AcademiaApp.Data;
+using PROJETOMVC.Models;
 using System;
 using System.Threading.Tasks;
 using System.Security.Claims;
@@ -13,11 +15,15 @@ namespace PROJETOMVC.Controllers
     {
         private readonly ITreinoRepositorio _treinoRepositorio;
         private readonly IUsuarioRepositorio _usuarioRepositorio;
+        private readonly IExercicioRepositorio _exercicioRepositorio;
+        private readonly AcademiaContext _context;
 
-        public TreinoController(ITreinoRepositorio treinoRepositorio, IUsuarioRepositorio usuarioRepositorio)
+        public TreinoController(ITreinoRepositorio treinoRepositorio, IUsuarioRepositorio usuarioRepositorio, IExercicioRepositorio exercicioRepositorio, AcademiaContext context)
         {
             _treinoRepositorio = treinoRepositorio;
             _usuarioRepositorio = usuarioRepositorio;
+            _exercicioRepositorio = exercicioRepositorio;
+            _context = context;
         }
 
         // GET: Treino/Index - Lista todos os treinos
@@ -64,6 +70,7 @@ namespace PROJETOMVC.Controllers
                     return RedirectToAction("Index");
                 }
 
+                await CarregarViewBags();
                 return View(treino);
             }
             catch (Exception ex)
@@ -71,6 +78,76 @@ namespace PROJETOMVC.Controllers
                 TempData["MensagemErro"] = $"Erro ao buscar treino: {ex.Message}";
                 return RedirectToAction("Index");
             }
+        }
+
+        // POST: Treino/AdicionarExercicio
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AdicionarExercicio(int TreinoId, int ExercicioId, int Ordem, int Series, string Repeticoes, decimal? Carga, int? TempoDescanso, string Observacoes, string? Divisao)
+        {
+            try
+            {
+                // Validação básica e mensagens mais detalhadas
+                var errors = new System.Collections.Generic.List<string>();
+                if (TreinoId <= 0) errors.Add("Treino inválido");
+                if (ExercicioId <= 0) errors.Add("Selecione um exercício");
+                if (Ordem <= 0) errors.Add("Informe a ordem (>=1)");
+                if (Series <= 0) errors.Add("Informe o número de séries (>=1)");
+                if (string.IsNullOrWhiteSpace(Repeticoes)) errors.Add("Informe as repetições");
+
+                if (errors.Count > 0)
+                {
+                    TempData["MensagemErro"] = "Preencha todos os campos obrigatórios: " + string.Join("; ", errors);
+                    return RedirectToAction("Detalhes", new { id = TreinoId });
+                }
+
+                var treino = await _treinoRepositorio.BuscarPorIdAsync(TreinoId);
+                var exercicio = await _exercicioRepositorio.BuscarPorIdAsync(ExercicioId);
+
+                if (treino == null || exercicio == null)
+                {
+                    TempData["MensagemErro"] = "Treino ou exercício não encontrados.";
+                    return RedirectToAction("Detalhes", new { id = TreinoId });
+                }
+
+                var treinoExercicio = new Models.TreinoExercicio
+                {
+                    TreinoId = TreinoId,
+                    ExercicioId = ExercicioId,
+                    Ordem = Ordem,
+                    Series = Series,
+                    Repeticoes = Repeticoes,
+                    Carga = Carga,
+                    TempoDescanso = TempoDescanso,
+                    Observacoes = Observacoes ?? string.Empty,
+                    Divisao = string.IsNullOrWhiteSpace(Divisao) ? null : Divisao
+                };
+
+                // Persist via repository to follow project pattern
+                await _treinoRepositorio.AdicionarTreinoExercicioAsync(treinoExercicio);
+
+                TempData["MensagemSucesso"] = "Exercício adicionado ao treino com sucesso.";
+            }
+            catch (Exception ex)
+            {
+                // Tenta obter mais detalhes da exceção interna (mensagem do provedor de BD)
+                var inner = ex.InnerException?.Message;
+
+                // Para DbUpdateException podemos extrair informações adicionais
+                string extra = string.Empty;
+                try
+                {
+                    // Evita referência direta a EF types para manter controller simples
+                    extra = ex.GetType().Name;
+                    if (!string.IsNullOrWhiteSpace(inner))
+                        extra += ": " + inner;
+                }
+                catch { /* ignore */ }
+
+                TempData["MensagemErro"] = $"Erro ao adicionar exercício: {ex.Message}" + (string.IsNullOrWhiteSpace(extra) ? string.Empty : " → " + extra);
+            }
+
+            return RedirectToAction("Detalhes", new { id = TreinoId });
         }
 
         // POST: Treino/Adicionar
@@ -159,6 +236,10 @@ namespace PROJETOMVC.Controllers
         {
             var usuarios = await _usuarioRepositorio.BuscarTodosAsync();
             ViewBag.Usuarios = usuarios;
+            
+            // Exercícios ativos para dropdowns no modal
+            var exercicios = await _exercicioRepositorio.BuscarAtivosAsync();
+            ViewBag.Exercicios = exercicios;
         }
     }
 }

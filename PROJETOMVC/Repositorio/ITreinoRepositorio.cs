@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AcademiaApp.Models;
 using PROJETOMVC.Models.Enums;
+using PROJETOMVC.Models;
 
 namespace PROJETOMVC.Repositorio
 {
@@ -24,5 +25,8 @@ namespace PROJETOMVC.Repositorio
         // Busca com relacionamentos
         Task<Treino?> BuscarComExerciciosAsync(int id);
         Task<Treino?> BuscarComExecucoesAsync(int id);
+        
+        // Adicionar/Remover exercício de um treino
+        Task<TreinoExercicio> AdicionarTreinoExercicioAsync(TreinoExercicio treinoExercicio);
     }
 }

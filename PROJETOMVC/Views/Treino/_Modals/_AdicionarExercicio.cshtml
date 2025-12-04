@@ -1,0 +1,79 @@
+@using PROJETOMVC.Models
+@{
+    var exercicios = ViewBag.Exercicios as IEnumerable<Exercicio> ?? System.Linq.Enumerable.Empty<Exercicio>();
+}
+
+<div class="modal fade" id="modalAdicionarExercicio" tabindex="-1" aria-labelledby="modalAdicionarExercicioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAdicionarExercicioLabel">Adicionar Exercício ao Treino</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="AdicionarExercicio" asp-controller="Treino" method="post">
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="TreinoId" value="@Model?.Id" />
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Exercício</label>
+                            <select name="ExercicioId" class="form-select" required>
+                                <option value="">-- Selecionar exercício --</option>
+                                @foreach (Exercicio ex in exercicios)
+                                {
+                                    <option value="@ex.Id">@ex.Nome (@ex.GrupoMuscular)</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Ordem</label>
+                            <input type="number" name="Ordem" class="form-control" min="1" id="inputOrdemModal" required />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Séries</label>
+                            <input type="number" name="Series" class="form-control" min="1" value="3" required />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Repetições</label>
+                            <input type="text" name="Repeticoes" class="form-control" value="10" required />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Carga (kg)</label>
+                            <input type="number" step="0.5" name="Carga" class="form-control" />
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Descanso (s)</label>
+                            <input type="number" name="TempoDescanso" class="form-control" min="0" />
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <label class="form-label">Observações</label>
+                            <textarea name="Observacoes" class="form-control" rows="2"></textarea>
+                        </div>
+                        
+                        <div class="col-md-3">
+                            <label class="form-label">Divisão (opcional)</label>
+                            <select name="Divisao" class="form-select">
+                                <option value="">-- Nenhuma --</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

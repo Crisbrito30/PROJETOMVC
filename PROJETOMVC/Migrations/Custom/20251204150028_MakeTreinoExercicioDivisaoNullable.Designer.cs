@@ -3,17 +3,20 @@ using System;
 using AcademiaApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace PROJETOMVC.Migrations
+namespace PROJETOMVC.Migrations.Custom
 {
     [DbContext(typeof(AcademiaContext))]
-    partial class AcademiaContextModelSnapshot : ModelSnapshot
+    [Migration("20251204150028_MakeTreinoExercicioDivisaoNullable")]
+    partial class MakeTreinoExercicioDivisaoNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
