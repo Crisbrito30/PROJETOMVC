@@ -87,17 +87,10 @@ namespace PROJETOMVC.Controllers
         {
             try
             {
-                // Validação básica e mensagens mais detalhadas
-                var errors = new System.Collections.Generic.List<string>();
-                if (TreinoId <= 0) errors.Add("Treino inválido");
-                if (ExercicioId <= 0) errors.Add("Selecione um exercício");
-                if (Ordem <= 0) errors.Add("Informe a ordem (>=1)");
-                if (Series <= 0) errors.Add("Informe o número de séries (>=1)");
-                if (string.IsNullOrWhiteSpace(Repeticoes)) errors.Add("Informe as repetições");
-
-                if (errors.Count > 0)
+                var erroValidacao = ValidarDadosTreinoExercicio(TreinoId, ExercicioId, Ordem, Series, Repeticoes);
+                if (!string.IsNullOrEmpty(erroValidacao))
                 {
-                    TempData["MensagemErro"] = "Preencha todos os campos obrigatórios: " + string.Join("; ", errors);
+                    TempData["MensagemErro"] = erroValidacao;
                     return RedirectToAction("Detalhes", new { id = TreinoId });
                 }
 
@@ -123,28 +116,17 @@ namespace PROJETOMVC.Controllers
                     Divisao = string.IsNullOrWhiteSpace(Divisao) ? null : Divisao
                 };
 
-                // Persist via repository to follow project pattern
                 await _treinoRepositorio.AdicionarTreinoExercicioAsync(treinoExercicio);
-
                 TempData["MensagemSucesso"] = "Exercício adicionado ao treino com sucesso.";
             }
             catch (Exception ex)
             {
-                // Tenta obter mais detalhes da exceção interna (mensagem do provedor de BD)
                 var inner = ex.InnerException?.Message;
+                string extra = ex.GetType().Name;
+                if (!string.IsNullOrWhiteSpace(inner))
+                    extra += ": " + inner;
 
-                // Para DbUpdateException podemos extrair informações adicionais
-                string extra = string.Empty;
-                try
-                {
-                    // Evita referência direta a EF types para manter controller simples
-                    extra = ex.GetType().Name;
-                    if (!string.IsNullOrWhiteSpace(inner))
-                        extra += ": " + inner;
-                }
-                catch { /* ignore */ }
-
-                TempData["MensagemErro"] = $"Erro ao adicionar exercício: {ex.Message}" + (string.IsNullOrWhiteSpace(extra) ? string.Empty : " → " + extra);
+                TempData["MensagemErro"] = $"Erro ao adicionar exercício: {ex.Message} → {extra}";
             }
 
             return RedirectToAction("Detalhes", new { id = TreinoId });
@@ -240,6 +222,17 @@ namespace PROJETOMVC.Controllers
             // Exercícios ativos para dropdowns no modal
             var exercicios = await _exercicioRepositorio.BuscarAtivosAsync();
             ViewBag.Exercicios = exercicios;
+        }
+
+        // Validação simples para os campos do TreinoExercicio vindo do modal
+        private string? ValidarDadosTreinoExercicio(int treinoId, int exercicioId, int ordem, int series, string repeticoes)
+        {
+            if (treinoId <= 0) return "Treino inválido.";
+            if (exercicioId <= 0) return "Exercício inválido.";
+            if (ordem <= 0) return "A ordem deve ser maior que zero.";
+            if (series <= 0) return "O número de séries deve ser maior que zero.";
+            if (string.IsNullOrWhiteSpace(repeticoes)) return "Preencha as repetições.";
+            return null;
         }
     }
 }

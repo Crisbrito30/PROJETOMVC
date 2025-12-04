@@ -3,6 +3,8 @@ using PROJETOMVC.Models;
 using PROJETOMVC.Repositorio;
 using Microsoft.AspNetCore.Authorization;
 using AcademiaApp.Models;
+using System.Security.Claims;
+using System;
 namespace PROJETOMVC.Controllers
 {
     [Authorize]
@@ -164,6 +166,38 @@ namespace PROJETOMVC.Controllers
             {
                 TempData["MensagemErro"] = $"Erro ao buscar usuário: {ex.Message}";
                 return RedirectToAction("Index");
+            }
+        }
+
+        // GET: Usuario/DetalhesJson - Retorna detalhes do usuário logado em JSON
+        [HttpGet]
+        public async Task<IActionResult> DetalhesJson()
+        {
+            try
+            {
+                var idStr = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!int.TryParse(idStr, out var id)) return Unauthorized();
+
+                var usuario = await _usuarioRepositorio.ListarPorIdAsync(id);
+                if (usuario == null) return NotFound();
+
+                return Json(new
+                {
+                    Id = usuario.Id,
+                    Nome = usuario.Nome,
+                    Email = usuario.Email,
+                    Cpf = usuario.Cpf,
+                    Telefone = usuario.Telefone,
+                    DataNascimento = usuario.DataNascimento?.ToString("yyyy-MM-dd"),
+                    Endereco = usuario.Endereco,
+                    Perfil = usuario.PerfilUser.ToString(),
+                    Ativo = usuario.Ativo,
+                    DataCadastro = usuario.DataCadastro.ToString("yyyy-MM-dd")
+                });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
             }
         }
     }

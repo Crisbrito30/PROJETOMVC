@@ -51,7 +51,7 @@ namespace PROJETOMVC.Repositorio
             }
 
             _context.Exercicios.Remove(exercicioBanco);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 

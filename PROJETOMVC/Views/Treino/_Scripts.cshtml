@@ -8,7 +8,10 @@
         document.getElementById('editTipo').value = tipo;
         document.getElementById('editDataInicio').value = dataInicio || '';
         document.getElementById('editDataFim').value = dataFim || '';
-        document.getElementById('editAtivo').checked = ativo;
+
+        const isActive = (ativo === true || ativo === 'true');
+        document.getElementById('editAtivo').checked = isActive;
+
         document.getElementById('editUsuarioId').value = usuarioId || '';
     }
 
@@ -17,5 +20,5 @@
         document.getElementById('deleteId').value = id;
         document.getElementById('deleteNome').textContent = nome;
     }
-   
+
 </script>

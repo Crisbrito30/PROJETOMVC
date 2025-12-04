@@ -103,6 +103,9 @@ namespace AcademiaApp.Data
             SeedData(modelBuilder);
         }
 
+        // Use DbContext.SaveChangesAsync provided by EF Core –
+        // accidental passthrough methods were removed.
+
         private void SeedData(ModelBuilder modelBuilder)
         {
             // Você pode adicionar dados iniciais aqui

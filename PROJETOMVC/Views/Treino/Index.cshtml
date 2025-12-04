@@ -77,15 +77,15 @@
                                     <td>
                                         @if (treino.Ativo)
                                         {
-                                            <span class="badge bg-success bg-opacity-25 ">Ativo</span>
+                                            <span class="badge bg-success bg-opacity-25 text-success fw-bold">Ativo</span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-secondary">Inativo</span>
+                                            <span class="badge bg-secondary bg-opacity-25 text-secondary fw-bold">Inativo</span>
                                         }
                                     </td>
                                     <td class="text-center pe-4">
-                                        <div class="btn-group" role="group">
+                                        <div class="d-flex gap-2 justify-content-center" role="group">
                                             <a asp-action="Detalhes" asp-route-id="@treino.Id" class="btn btn-sm btn-primary" title="Detalhes">
                                                 <i class="bi bi-eye"></i>
                                             </a>

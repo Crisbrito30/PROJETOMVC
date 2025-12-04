@@ -17,11 +17,11 @@
         <div>
             @if (Model.Ativo)
             {
-                <span class="badge bg-success fs-6">Ativo</span>
+                <span class="badge bg-success bg-opacity-25  text-success fs-6">Ativo</span>
             }
             else
             {
-                <span class="badge bg-secondary fs-6">Inativo</span>
+                <span class="badge bg-secondary bg-opacity-25 text-success fs-6">Inativo</span>
             }
         </div>
     </div>
@@ -150,7 +150,7 @@
                                     @foreach (var te in Model.TreinoExercicios.OrderBy(x => x.Ordem))
                                     {
                                         <tr>
-                                            <td><span class="badge bg-secondary">@te.Ordem</span></td>
+                                            <td><span class="fw-bold">@te.Ordem</span></td>
                                             <td class="fw-semibold">@te.Exercicio?.Nome</td>
                                             <td>@te.Series</td>
                                             <td>@te.Repeticoes</td>

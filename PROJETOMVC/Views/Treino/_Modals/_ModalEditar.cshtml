@@ -26,7 +26,9 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label fw-semibold">Status</label>
                             <div class="form-check form-switch mt-2">
-                                <input class="form-check-input" type="checkbox" id="editAtivo" name="Ativo" value="true">
+                                <input class="form-check-input" type="checkbox" id="editAtivo" name="Ativo"
+                                    value="true">
+                                <input type="hidden" name="Inativo" value="false" />
                                 <label class="form-check-label" for="editAtivo">
                                     Ativo
                                 </label>
@@ -36,7 +38,8 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Descrição/Objetivo</label>
-                        <textarea class="form-control" id="editDescricao" name="Descricao" rows="3" maxlength="500"></textarea>
+                        <textarea class="form-control" id="editDescricao" name="Descricao" rows="3"
+                            maxlength="500"></textarea>
                     </div>
 
                     <div class="row">
@@ -62,7 +65,7 @@
                             <label class="form-label fw-semibold">Aluno</label>
                             <select class="form-select" id="editUsuarioId" name="UsuarioId">
                                 <option value="">Não atribuído</option>
-                                @foreach (var aluno in alunos)
+                                @foreach (AcademiaApp.Models.UsuarioModel aluno in alunos)
                                 {
                                     <option value="@aluno.Id">@aluno.Nome</option>
                                 }

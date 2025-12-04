@@ -6,6 +6,7 @@ using PROJETOMVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PROJETOMVC.Repositorio
@@ -53,7 +54,7 @@ namespace PROJETOMVC.Repositorio
             }
 
             await _context.Treinos.AddAsync(treino);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(CancellationToken.None);
             return treino;
         }
 
@@ -87,7 +88,7 @@ namespace PROJETOMVC.Repositorio
             }
 
             _context.Treinos.Update(treinoBanco);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(CancellationToken.None);
             return treinoBanco;
         }
 
@@ -99,7 +100,7 @@ namespace PROJETOMVC.Repositorio
                 return false;
 
             _context.Treinos.Remove(treinoBanco);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(CancellationToken.None);
             return true;
         }
 
@@ -179,7 +180,7 @@ namespace PROJETOMVC.Repositorio
         public async Task<TreinoExercicio> AdicionarTreinoExercicioAsync(TreinoExercicio treinoExercicio)
         {
             await _context.TreinoExercicios.AddAsync(treinoExercicio);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(CancellationToken.None);
             return treinoExercicio;
         }
     }
