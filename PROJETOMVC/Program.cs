@@ -1,22 +1,41 @@
-﻿using AcademiaApp.Data;
+﻿
+using AcademiaApp.Data;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using PROJETOMVC.Repositorio;
 
-// outros usings...
+// 1) Descobrir/forçar o ambiente via variável do processo (terminal/launchSettings)
+var envFromProcess = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+                    ?? Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT")
+                    ?? "Production"; // default se nada estiver definido
 
+// 2) Carregar o .env correto ANTES de criar o builder
+if (string.Equals(envFromProcess, "Development", StringComparison.OrdinalIgnoreCase))
+{
+    Env.Load(".env.development");
+}
+else
+{
+    Env.Load(".env.production");
+}
+
+// 3) Agora crie o builder (o host já verá as variáveis carregadas)
 var builder = WebApplication.CreateBuilder(args);
 
-// DB, repositórios, sessão...
+// Logs de verificação (sem caracteres de escape!)
+var currentEnv = builder.Environment.EnvironmentName;
+var connString = builder.Configuration.GetConnectionString("DataBase");
 
+Console.WriteLine($"[CHECK] Ambiente: {currentEnv}");
+Console.WriteLine($"[CHECK] Connection String: {connString}");
 
+// 4) Serviços
 builder.Services.AddDbContext<AcademiaContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DataBase")));
 
 builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
-
 builder.Services.AddScoped<ITreinoRepositorio, TreinoRepositorio>();
-
 builder.Services.AddScoped<IExercicioRepositorio, ExercicioRepositorio>();
 
 builder.Services.AddSession(options =>
@@ -26,23 +45,21 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
-// Configura autenticação por cookie
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Login/Index";       // para onde redirecionar se não autenticado
+        options.LoginPath = "/Login/Index";
         options.LogoutPath = "/Login/Sair";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
         options.SlidingExpiration = true;
-        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // em produção
+        // Em produção, considere:
+        // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 
-// Controllers + views
 builder.Services.AddControllersWithViews();
 
+// 5) Pipeline
 var app = builder.Build();
-
 
 if (!app.Environment.IsDevelopment())
 {
@@ -51,11 +68,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();     // certifique-se que os arquivos estáticos estão habilitados
+app.UseStaticFiles();
 app.UseRouting();
 
-app.UseSession();         // sessão (se ainda quiser usar além do cookie)
-app.UseAuthentication();  // importante: antes de UseAuthorization
+app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

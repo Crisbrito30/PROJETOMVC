@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": ".NET Launch (Project)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build project",
+      "program": "${workspaceFolder}/PROJETOMVC/bin/Debug/net9.0/PROJETOMVC.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/PROJETOMVC",
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Now listening on: (https?://\\S+)"
+      }
+    },
+    {
+      "name": ".NET Attach (Choose Process)",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:pickProcess}"
+    }
+  ]
+}

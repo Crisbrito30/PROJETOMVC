@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dotnet watch run",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "watch",
+        "run",
+        "--project",
+        "${workspaceFolder}/PROJETOMVC/PROJETOMVC.csproj"
+      ],
+      "isBackground": true,
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    },
+    {
+      "label": "build project",
+      "type": "process",
+      "command": "dotnet",
+      "args": [
+        "build",
+        "${workspaceFolder}/PROJETOMVC/PROJETOMVC.csproj"
+      ],
+      "problemMatcher": [
+        "$msCompile"
+      ]
+    }
+  ]
+}
