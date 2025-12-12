@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.VisualBasic;
 using PROJETOMVC.Models;
 using PROJETOMVC.Models.Enums;

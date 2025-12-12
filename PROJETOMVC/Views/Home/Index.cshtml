@@ -1,8 +1,165 @@
 ﻿@{
-    ViewData["Title"] = "Pagina inicial";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bem vindo!</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Dashboard</h2>
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            var fullName = User.FindFirst("full_name")?.Value
+            ?? User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value
+            ?? User.Identity?.Name;
+            <div class="navbar-text bg-primary bg-opacity-10 text-primary rounded-3 px-2 py-1 fw-bold">
+                <i class="bi bi-person-circle me-2 fs-5"></i> @fullName
+            </div>
+        }
+    </div>
+
+    <!-- Cards resumo -->
+    <div class="row g-3">
+        <div class="col-sm-6 col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="fw-semibold">Usuários</div>
+                    <div id="cardTotalUsuarios" class="display-6">—</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="fw-semibold">Treinos</div>
+                    <div id="cardTotalTreinos" class="display-6">—</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="fw-semibold">Exercícios</div>
+                    <div id="cardTotalExercicios" class="display-6">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="row g-3 mt-1">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Usuários por mês (12)</div>
+                <div class="card-body"><canvas id="chartUsuariosPorMes" height="160"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Treinos por dia (30)</div>
+                <div class="card-body"><canvas id="chartTreinosPorDia" height="160"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Exercícios mais usados (Top 10)</div>
+                <div class="card-body"><canvas id="chartExerciciosMaisUsados" height="160"></canvas></div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header">Adesão (7 dias)</div>
+                <div class="card-body"><canvas id="chartAdesao" height="160"></canvas></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    (async function () {
+        const getJson = async (url) => {
+            const r = await fetch(url);
+            if (!r.ok) throw new Error(`Erro ao carregar ${url}: ${r.status}`);
+            return r.json();
+        };
+
+        // Cards resumo
+        const resumo = await getJson('/dashboard/metrics/resumo');
+        document.getElementById('cardTotalUsuarios').textContent = resumo.totalUsuarios ?? '—';
+        document.getElementById('cardTotalTreinos').textContent = resumo.totalTreinos ?? '—';
+        document.getElementById('cardTotalExercicios').textContent = resumo.totalExercicios ?? '—';
+
+        // Usuários por mês
+        const usp = await getJson('/dashboard/metrics/usuarios-por-mes?meses=12');
+        new Chart(document.getElementById('chartUsuariosPorMes'), {
+            type: 'bar',
+            data: {
+                labels: usp.map(x => x.label),
+                datasets: [{
+                    label: 'Usuários',
+                    data: usp.map(x => x.valor),
+                    backgroundColor: 'rgba(13,110,253,0.4)',
+                    borderColor: 'rgb(13,110,253)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+
+        // Treinos por dia (DataCriacao)
+        const tpd = await getJson('/dashboard/metrics/treinos-por-dia?dias=30');
+        new Chart(document.getElementById('chartTreinosPorDia'), {
+            type: 'line',
+            data: {
+                labels: tpd.map(x => x.label),
+                datasets: [{
+                    label: 'Treinos',
+                    data: tpd.map(x => x.valor),
+                    borderColor: 'rgb(25,135,84)',
+                    backgroundColor: 'rgba(25,135,84,0.2)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+
+        // Exercícios mais usados (Chart.js v4 → horizontal: indexAxis: 'y')
+        const emu = await getJson('/dashboard/metrics/exercicios-mais-usados?top=10');
+        new Chart(document.getElementById('chartExerciciosMaisUsados'), {
+            type: 'bar',
+            data: {
+                labels: emu.map(x => x.nome),
+                datasets: [{
+                    label: 'Quantidade',
+                    data: emu.map(x => x.quantidade),
+                    backgroundColor: 'rgba(220,53,69,0.4)',
+                    borderColor: 'rgb(220,53,69)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                indexAxis: 'y',
+                scales: { x: { beginAtZero: true } }
+            }
+        });
+
+        // Adesão 7 dias (DataCriacao por dia)
+        const adesao = await getJson('/dashboard/metrics/adesao-ultimos7dias');
+        new Chart(document.getElementById('chartAdesao'), {
+            type: 'bar',
+            data: {
+                labels: adesao.map(x => x.nome),
+                datasets: [{
+                    label: 'Treinos/dia',
+                    data: adesao.map(x => x.quantidade),
+                    backgroundColor: 'rgba(255,193,7,0.5)',
+                    borderColor: 'rgb(255,193,7)',
+                    borderWidth: 1
+                }]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+    })();
+</script>

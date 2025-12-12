@@ -1,0 +1,88 @@
+
+(async function () {
+    const getJson = async (url) => {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`Erro ao carregar ${url}: ${r.status}`);
+        return r.json();
+    };
+
+    // Cards resumo
+    const resumo = await getJson('/dashboard/metrics/resumo');
+    document.getElementById('cardTotalUsuarios').textContent = resumo.totalUsuarios ?? '—';
+    document.getElementById('cardTotalTreinos').textContent = resumo.totalTreinos ?? '—';
+    document.getElementById('cardTotalExercicios').textContent = resumo.totalExercicios ?? '—';
+
+    // Usuários por mês
+    const usp = await getJson('/dashboard/metrics/usuarios-por-mes?meses=12');
+    new Chart(document.getElementById('chartUsuariosPorMes'), {
+        type: 'bar',
+        data: {
+            labels: usp.map(x => x.label),
+            datasets: [{
+                label: 'Usuários',
+                data: usp.map(x => x.valor),
+                backgroundColor: 'rgba(13,110,253,0.4)',
+                borderColor: 'rgb(13,110,253)',
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Treinos por dia (DataCriacao)
+    const tpd = await getJson('/dashboard/metrics/treinos-por-dia?dias=30');
+    new Chart(document.getElementById('chartTreinosPorDia'), {
+        type: 'line',
+        data: {
+            labels: tpd.map(x => x.label),
+            datasets: [{
+                label: 'Treinos',
+                data: tpd.map(x => x.valor),
+                borderColor: 'rgb(25,135,84)',
+                backgroundColor: 'rgba(25,135,84,0.2)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+
+    // Exercícios mais usados (Chart.js v4 → horizontal: indexAxis: 'y')
+    const emu = await getJson('/dashboard/metrics/exercicios-mais-usados?top=10');
+    new Chart(document.getElementById('chartExerciciosMaisUsados'), {
+        type: 'bar',
+        data: {
+            labels: emu.map(x => x.nome),
+            datasets: [{
+                label: 'Quantidade',
+                data: emu.map(x => x.quantidade),
+                backgroundColor: 'rgba(220,53,69,0.4)',
+                borderColor: 'rgb(220,53,69)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            indexAxis: 'y',
+            scales: { x: { beginAtZero: true } }
+        }
+    });
+
+    // Adesão 7 dias (DataCriacao por dia)
+    const adesao = await getJson('/dashboard/metrics/adesao-ultimos7dias');
+    new Chart(document.getElementById('chartAdesao'), {
+        type: 'bar',
+        data: {
+            labels: adesao.map(x => x.nome),
+            datasets: [{
+                label: 'Treinos/dia',
+                data: adesao.map(x => x.quantidade),
+                backgroundColor: 'rgba(255,193,7,0.5)',
+                borderColor: 'rgb(255,193,7)',
+                borderWidth: 1
+            }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+    });
+})();

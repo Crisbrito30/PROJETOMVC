@@ -134,19 +134,21 @@
 </head>
 
 
+
 <body>
     <div class="container-fluid vh-100">
         <div class="row h-100">
             <!-- Coluna da imagem -->
-            <div class="col-md-6 d-none d-md-block p-0">
-
+            <div class="col-md-6  p-0 text-white d-flex align-items-center justify-content-center">
+                <i class="bi bi-box-fill m-3 fs-1"></i>
+                <h1>PowerGym</h1>
             </div>
 
             <!-- Coluna do login -->
             <div class="col-md-6 d-flex align-items-center justify-content-center bg-white">
                 <div class="login-container">
                     <div class="login-card">
-                        <div class="login-header">
+                        <div class="login-header text-center">
                             <i class="bi bi-shield-lock-fill"></i>
                             <h3>Bem-vindo!</h3>
                             <p>Faça login para acessar o sistema</p>
@@ -154,22 +156,26 @@
 
                         <div class="login-body">
                             <partial name="_Mensagens" />
-                            <form asp-controller="Login" asp-action="Entrar" method="POST" 
+                            <form asp-controller="Login" asp-action="Entrar" method="POST">
+                                <!-- FORMULÁRIO CORRIGIDO -->
+                                Entrar
+                                @Html.AntiForgeryToken()
 
-                            @Html.AntiForgeryToken() 
-                            
-                            <div class="mb-3">
-                                <label class="form-label">
-                                    <i class="bi bi-person-fill me-1"></i>Login
-                                </label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-person"></i>
-                                    </span>
-                                    <input type="text" class="form-control" asp-for="Login"
-                                        placeholder="Digite seu login" autofocus required />
+                                <!-- Campo Login -->
+                                <div class="mb-3">
+                                    <label class="form-label">
+                                        <i class="bi bi-person-fill me-1"></i>Login
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">
+                                            <i class="bi bi-person"></i>
+                                        </span>
+                                        <input type="text" class="form-control" asp-for="Login"
+                                            placeholder="Digite seu login" autofocus required />
+                                    </div>
                                 </div>
 
+                                <!-- Campo Senha -->
                                 <div class="mb-3">
                                     <label class="form-label">
                                         <i class="bi bi-lock-fill me-1"></i>Senha
@@ -184,24 +190,25 @@
                                         </div>
                                         <i class="bi bi-eye password-toggle" id="togglePassword"></i>
                                     </div>
-                                    <button type="submit" class="btn btn-primary btn-login">
-                                        <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
-                                    </button>
                                 </div>
+
+                                <!-- Botão -->
+                                <button type="submit" class="btn btn-primary btn-login w-100 mt-3">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+                                </button>
                             </form>
                         </div>
-
                     </div>
-                </div>
-
-                <div class="text-center mt-3">
-                    <small class="text-muted">© 2025 Sistema de Gerenciamento</small>
                 </div>
             </div>
         </div>
-    </div>
 
+        <div class="text-center mt-3">
+            <small class="text-muted">© 2025 Sistema de Gerenciamento</small>
+        </div>
+    </div>
 </body>
+
 
 
 </html>
